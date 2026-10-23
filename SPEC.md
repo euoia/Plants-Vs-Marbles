@@ -1,0 +1,125 @@
+# Ants vs Marbles — Specification
+
+A browser tower-defence game in the style of Plants vs Zombies. Ants climb a marble maze from the exit; the player defends by dropping different types of marbles into the maze.
+
+- **Implementation:** single file, [index.html](./index.html) (HTML5 canvas + vanilla JS, no dependencies).
+- **Run:** open `index.html` in any modern browser.
+
+## 1. Objective
+
+- **Lose:** any ant reaches the top of the maze.
+- **Win:** the whole invasion schedule has spawned (including the final boss) and all ants are dead.
+
+## 2. Playfield
+
+- Vertical maze of **5 lanes** (100 px wide, 540 px long). Canvas is 900×700.
+- **Top:** the marble chute (red line). Marbles are dropped in from here.
+- **Bottom:** the exit, where ants enter. Marbles stop at the exit.
+- Top bar: crumb counter, marble selector (11 slots incl. track pieces), eater, glove, shovel.
+- Left side: invasion progress bar.
+
+## 3. Resources — Crumbs
+
+- Start with **150**.
+- Crumbs fall from the sky every 7–10 s (worth 25, vanish after 10 s); click to collect.
+- Gold marbles also produce crumbs (see below).
+
+## 4. Marbles (defenders)
+
+Each marble has a cost, health, cooldown (after placing one, that type is unavailable for a while) and a mass used for drop damage.
+
+| Marble | Key | Cost | HP | Cooldown | Mass | Behaviour |
+|---|---|---|---|---|---|---|
+| Gold | 1 | 50 | 100 | 5 s | 3 | Drops a 25-crumb pickup every 10 s |
+| Shooter | 2 | 100 | 100 | 5 s | 3 | Fires a shot (25 dmg) down its lane every 1.4 s while an ant is below it |
+| Frost | 3 | 175 | 100 | 5 s | 3 | Like Shooter, 20 dmg and slows the ant 50% for 3 s |
+| Twin | 4 | 200 | 100 | 5 s | 5 | Fires two shots (25 dmg each) per volley |
+| Steel | 5 | 50 | 900 | 15 s | 8 | Tough wall, heaviest drop damage |
+| Bomb | 6 | 150 | 1 | 25 s | 2 | Explodes 0.8 s after touching an ant (or immediately if killed): kills every ant (including boss and armored) within 1.6 lanes sideways and 130 px vertically |
+| Glass | 7 | 75 | 1 | 8 s | 4 | Shatters the moment it stops (lands on an ant or reaches the exit), doing normal drop damage. Leaves 8 shards across the lane; each cuts ants crawling over it for 14 dmg/s (ignores armor), lasts 30 s and wears out after dealing 90 damage |
+
+### 4.1 Placing and rolling
+
+- Select a marble (click slot or press 1–6), then click a lane. The marble is dropped from the **clicked height** (clamped to between the chute and just above the exit).
+- It cannot be placed if unaffordable or on cooldown. Marbles do not collide with each other and can overlap freely.
+- Marbles accelerate while falling (500 px/s², max 420 px/s, starting 75 px/s) toward the exit.
+- A marble stops when it reaches the exit or touches an ant. Marbles pass through each other, **except** that they queue up (about 54 px apart) behind a marble that is stopped by an ant being chewed, until that marble dies or the ant is killed.
+- Marbles are destroyed when HP reaches 0.
+
+### 4.2 Drop (impact) damage
+
+If a marble lands on an ant while still falling:
+
+`damage = round(mass × fallDistance / 100)`
+
+Higher drops and heavier marbles hurt more. Damage is shown as a floating number. The distance counts only the original drop, not later rolling.
+
+### 4.3 Shovel
+
+Toggle with the shovel button or **S**. Click a lane to remove the nearest marble or track piece (within ~34 px). No refund.
+
+### 4.4 Glove
+
+Toggle with the glove button or **G**. Click a marble or track piece to pick it up, then click a lane/height to put it down (free). Marbles put down start rolling again with no drop damage. After putting an item down the glove has an **8 s cooldown** (shown on the button). Esc / right-click returns the held item without triggering the cooldown.
+
+## 4a. Track pieces
+
+Placed in a lane at the clicked height (same selector bar, keys 8, 9, 0 and -). Ants ignore them. Pieces trigger every time a marble passes over them while moving downward, so marbles can loop through a route indefinitely (e.g. ramp right → ramp left → spring). A piece re-arms for a marble once it has moved away from it.
+
+| Piece | Key | Cost | Cooldown | Effect |
+|---|---|---|---|---|
+| Spring | 8 | 75 | 2 s | Launches a marble back up to the top of the maze; it then falls again and gets a fresh drop for impact damage |
+| Ramp ◀ | 9 | 25 | 1 s | Slides a marble into the lane to the left (not placeable in the leftmost lane) |
+| Ramp ▶ | 0 | 25 | 1 s | Slides a marble into the lane to the right (not placeable in the rightmost lane) |
+| Boost | - | 60 | 2 s | Accelerates a marble to 720 px/s (normal max 420) until it stops. A boosted marble that hits an ant gets +250 px of effective fall distance and ×1.5 impact damage |
+
+Pieces can be chained to build routes and loops (e.g. ramp across, spring back up). Pieces can't be placed within 44 px of another piece in the same lane.
+
+## 4b. Ant Eater (special weapon)
+
+- Button in the top bar or key **E**. Free, but has a **90 s cooldown** (first available after 20 s).
+- An anteater appears in every lane at the exit and sweeps up the maze (230 px/s), eating **every ant** it passes, including the boss. Ants that spawn during the sweep are eaten too.
+- Marbles are unaffected.
+
+## 5. Ants (attackers)
+
+Ants spawn below the exit in a random lane and climb. When a marble blocks them they chew it (damage per second = `dmg`). Speeds below are in px/s before the global 0.8 speed scale.
+
+| Ant | HP | Speed | DPS | Notes |
+|---|---|---|---|---|
+| Basic | 100 | 9 | 20 | Standard |
+| Fast | 60 | 18 | 15 | Small, quick |
+| Tank | 350 | 6 | 25 | Large |
+| Jumper (green) | 80 | 11 | 18 | Leaps over the first marble it meets (once) |
+| Armored (grey) | 150 + 150 armor | 7 | 22 | Shots damage armor first (at 60%); bombs and drop damage ignore armor |
+| Spitter (blue, shiny) | 90 | 8 | 15 | Stops 210 px away from a marble and spits venom every 2 s: 12 dmg + poison (7 dmg/s for 4 s) |
+| Red | 600 | 3.5 | 90 | Huge, very slow, devastating bite |
+| Swarm (brown) | 30 | 14 | 8 | Tiny; arrives in packs of 5 |
+| Boss | 1500 | 4 | 60 | Final ant of the level |
+
+Slowed ants move at half speed.
+
+## 6. Wave schedule
+
+- First ant at 20 s. Each following ant arrives after `max(2.2, 9 − 0.12 × i)` seconds, for **60 ants**, then a boss 10 s after the last.
+- Type is rolled per ant, unlocking as the game progresses: fast (from #7), jumper (#10), swarm (#13), tank (#16), red (#19), armored (#21), spitter (#26).
+- Every 20th ant is accompanied by 4 extra basic ants.
+
+## 7. Controls
+
+| Input | Action |
+|---|---|
+| Click bar slot / keys 1–9, 0, - | Select marble or track piece |
+| E / Ant Eater button | Call the Ant Eater |
+| Click lane | Drop selected marble |
+| Click crumb | Collect |
+| S / G | Toggle shovel / glove |
+| Right-click / Esc | Cancel selection |
+| Click on menu/win/lose screen | Start / restart |
+
+## 8. Possible future work
+
+- Multiple levels with hand-designed waves and difficulty settings
+- More marble types (e.g. magnet, bouncing, splash)
+- Sound and music, high scores, save progress
+- Mobile / touch support
