@@ -15,7 +15,7 @@ A browser tower-defence game in the style of Plants vs Zombies. Ants climb a mar
 - Vertical maze of **5 lanes** (100 px wide, 540 px long). Canvas is 900×700.
 - **Top:** the marble chute (red line). Marbles are dropped in from here.
 - **Bottom:** the exit, where ants enter. Marbles stop at the exit.
-- Top bar: crumb counter, marble selector (11 slots incl. track pieces), eater, glove, shovel.
+- Top bar: crumb counter, marble selector (11 slots incl. track pieces), eater, glove.
 - Left side: invasion progress bar.
 
 ## 3. Resources — Crumbs
@@ -53,10 +53,6 @@ If a marble lands on an ant while still falling:
 `damage = round(mass × fallDistance / 100)`
 
 Higher drops and heavier marbles hurt more. Damage is shown as a floating number. The distance counts only the original drop, not later rolling.
-
-### 4.3 Shovel
-
-Toggle with the shovel button or **S**. Click a lane to remove the nearest marble or track piece (within ~34 px). No refund.
 
 ### 4.4 Glove
 
@@ -113,8 +109,9 @@ Slowed ants move at half speed.
 | E / Ant Eater button | Call the Ant Eater |
 | Click lane | Drop selected marble |
 | Click crumb | Collect |
-| S / G | Toggle shovel / glove |
+| G | Toggle glove |
 | Right-click / Esc | Cancel selection |
+| P / Pause button (left panel) | Pause / resume (freezes the whole game) |
 | Click on menu/win/lose screen | Start / restart |
 
 ## 8. Possible future work
