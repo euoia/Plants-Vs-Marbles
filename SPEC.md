@@ -79,7 +79,7 @@ Pieces can be chained to build routes and loops (e.g. ramp across, spring back u
 
 ## 5. Ants (attackers)
 
-Ants spawn from a visible ant hill below the exit in a random lane. They spend a short moment digging out of the ground before climbing. When a marble blocks them they chew it (damage per second = `dmg`). Speeds below are in px/s before the global 0.8 speed scale.
+Ants spawn head-first from a visible ant hill below the exit in a random lane, with soil hiding the underground body. Packs emerge one after another from the same hill rather than starting off-screen. Emergence takes 0.95 s (1.8 s for the giant Queen), then continues smoothly into climbing without resetting position. Emerging ants do not attack, block marbles, or take damage from shots, bombs, or shards; the Ant Eater can still eat them. The Queen's babies appear beside her rather than at the hills. When a marble blocks them they chew it (damage per second = `dmg`). Speeds below are in px/s before the global 0.8 speed scale.
 
 | Ant | HP | Speed | DPS | Notes |
 |---|---|---|---|---|

@@ -40,7 +40,7 @@ const RING_REWARD=2;
 const ORDER=['gold','red','blue','twin','steel','bomb','glass','spring','rampL','rampR','boost','ring'];
 const BOOST_V=720,BOOST_BONUS=250,BOOST_MULT=1.5,GLOVE_CD=8;
 const SHARD_R=22,SHARD_DPS=14,SHARD_LIFE=30,SHARD_DUR=90,SHARD_COUNT=8;
-const DEATH_LIFE=.7,SPAWN_DUR=.95,SPAWN_RISE=42;
+const DEATH_LIFE=.7,SPAWN_DUR=.95,HILL_Y=BOTTOM+10;
 function shatter(p){
   const x=laneX(p.l),y=p.y;
   for(let i=0;i<SHARD_COUNT;i++)
@@ -195,8 +195,9 @@ function note(t){S.msg={t,life:1.5};}
 function setDebug(){debug=!debug;if(debug){S.crumbs=9999;}note('Debug mode '+(debug?'ON: infinite crumbs':'OFF'));}
 function explode(p){
   const x=laneX(p.l),y=p.y;
-  for(const a of S.ants)if(a.wide){if(Math.abs(a.y-y)<130)hurt(a,QUEEN_BOMB_DMG);}
+  for(const a of S.ants)if(!a.spawn){if(a.wide){if(Math.abs(a.y-y)<130)hurt(a,QUEEN_BOMB_DMG);}
     else if(!(a.jump&&a.jump.dig)&&Math.abs(a.x-x)<LW*1.6&&Math.abs(a.y-y)<130)hurt(a,99999);
+  }
   S.fx.push({x,y,t:0,max:.5,kind:'boom'});
   p.hp=0;p.boom=true;
 }
@@ -210,17 +211,24 @@ function rememberDeath(kind,entity,x,y){
   entity.deathQueued=true;
   S.deaths.push({kind,entity:{...entity,jump:null,spawn:null},x,y,t:0,max:DEATH_LIFE});
 }
+function emergeAnt(a,delay=0){
+  const size=ANTS[a.type].size;
+  const from=HILL_Y+(a.wide?75:30*size),to=HILL_Y-(a.wide?218:30*size);
+  a.y=from;
+  a.spawn={t:-delay,dur:a.wide?1.8:SPAWN_DUR,from,to};
+  return a;
+}
 
 function spawnAnt(type,l,n){
   const d=ANTS[type];
   n=n||d.group||1;
   if(d.wide){
-    S.ants.push({type,l:2,wide:true,x:GX+LANES*LW/2,y:BOTTOM+30,hp:d.hp,max:d.hp,armor:0,slow:0,flash:0,ph:0,jumped:false,jump:null,lift:0,spit:1,brood:d.brood,spawn:{t:0,dur:SPAWN_DUR}});
+    S.ants.push(emergeAnt({type,l:2,wide:true,x:GX+LANES*LW/2,hp:d.hp,max:d.hp,armor:0,slow:0,flash:0,ph:0,jumped:false,jump:null,lift:0,spit:1,brood:d.brood}));
     return;
   }
   for(let i=0;i<n;i++)
-    S.ants.push({type,l,x:laneX(l)+(n>5?((i%3)-1)*16:n>1?(i%2?10:-10):0),y:BOTTOM+30+i*(n>5?12:24),hp:d.hp*(S.antHp||1),max:d.hp*(S.antHp||1),armor:d.armor||0,
-      slow:0,flash:0,ph:Math.random()*6,jumped:false,jump:null,lift:0,spit:1+Math.random(),digs:d.digs||0,spawn:{t:0,dur:SPAWN_DUR}});
+    S.ants.push(emergeAnt({type,l,x:laneX(l)+(n>5?((i%3)-1)*16:n>1?(i%2?10:-10):0),hp:d.hp*(S.antHp||1),max:d.hp*(S.antHp||1),armor:d.armor||0,
+      slow:0,flash:0,ph:Math.random()*6,jumped:false,jump:null,lift:0,spit:1+Math.random(),digs:d.digs||0},i*.22));
 }
 const ANT_KEYS=Object.keys(ANTS);
 const antBtn=i=>({x:4+i*74,y:BOTTOM+14,w:70,h:30});
@@ -234,7 +242,7 @@ function update(dt){
   // glass shards cut ants that crawl over them and wear out over time
   for(const s of S.shards){
     s.life-=dt;
-    for(const a of S.ants)if(!a.jump&&(a.wide||Math.abs(a.x-s.x)<SHARD_R)&&Math.abs(a.y-s.y)<SHARD_R){
+    for(const a of S.ants)if(!a.spawn&&!a.jump&&(a.wide||Math.abs(a.x-s.x)<SHARD_R)&&Math.abs(a.y-s.y)<SHARD_R){
       a.hp-=SHARD_DPS*dt;s.dur-=SHARD_DPS*dt;
     }
   }
@@ -265,7 +273,7 @@ function update(dt){
     const rising=p.vy<0; // launched by a spring: flies up freely
     let blocked=!rising&&p.y>=BOTTOM-30;
     if(!rising){
-      for(const a of S.ants)if((a.wide||a.l===p.l)&&a.y>p.y&&a.y-p.y<MA&&!a.jump){
+      for(const a of S.ants)if(a.hp>0&&!a.spawn&&(a.wide||a.l===p.l)&&a.y>p.y&&a.y-p.y<MA&&!a.jump){
         blocked=true;p.engaged=true;p.stuck=true;
         if(p.falling&&p.fallen>0){ // landing on an ant: damage scales with marble weight and drop height
           const dmg=Math.round(TYPES[p.type].mass*p.fallen/100*(p.boosted?BOOST_MULT:1));
@@ -308,7 +316,7 @@ function update(dt){
         break;
       }
     }
-    const antBelow=S.ants.some(a=>(a.wide||a.l===p.l)&&a.y>p.y);
+    const antBelow=S.ants.some(a=>a.hp>0&&!a.spawn&&(a.wide||a.l===p.l)&&a.y>p.y);
     if(p.type==='gold'&&p.t>=10){p.t=0;S.drops.push({x:laneX(p.l),y:p.y,ty:p.y+25,v:60,val:25,life:10});}
     if((p.type==='red'||p.type==='blue')&&antBelow&&p.t>=1.4){p.t=0;fire(p,p.type==='blue');}
     if(p.type==='twin'&&antBelow&&p.t>=1.4){p.t=0;fire(p,false);setTimeout(()=>{if(S.plants.includes(p)&&S.state==='play')fire(p,false)},160);}
@@ -321,7 +329,7 @@ function update(dt){
   for(const s of S.shots){
     s.y+=300*dt;
     for(const a of S.ants){
-      if((a.l===s.l||a.wide)&&a.hp>0&&!(a.jump&&a.jump.dig)&&Math.abs(a.y-s.y)<(a.wide?30:18)){
+      if((a.l===s.l||a.wide)&&a.hp>0&&!a.spawn&&!(a.jump&&a.jump.dig)&&Math.abs(a.y-s.y)<(a.wide?30:18)){
         hurt(a,s.ice?20:25,true);if(s.ice)a.slow=3;s.dead=true;break;}
     }
     if(s.y>cv.height)s.dead=true;
@@ -329,12 +337,16 @@ function update(dt){
   S.shots=S.shots.filter(s=>!s.dead);
   // ants climb up the lane
   for(const a of S.ants){
+    if(a.hp<=0)continue;
     const d=ANTS[a.type];
     a.slow=Math.max(0,a.slow-dt);a.flash=Math.max(0,a.flash-dt);a.ph+=dt*8;
     if(a.spawn){
       a.spawn.t+=dt;
-      if(a.spawn.t<SPAWN_DUR)continue;
-      a.spawn=null;
+      const k=Math.max(0,Math.min(1,a.spawn.t/a.spawn.dur));
+      const eased=k*k*(3-2*k);
+      a.y=a.spawn.from+(a.spawn.to-a.spawn.from)*eased;
+      if(k===1)a.spawn=null;
+      continue;
     }
     const sp=d.speed*SPD*(S.antSpd||1)*(a.slow>0?.5:1);
     if(a.jump){
@@ -359,7 +371,7 @@ function update(dt){
         for(let i=0;i<d.babies;i++){
           const l=Math.floor(Math.random()*LANES),bd=ANTS.swarm;
           S.ants.push({type:'swarm',l,x:laneX(l)+(Math.random()-.5)*30,y:Math.min(BOTTOM+40,a.y+d.len*.7)+Math.random()*30,hp:bd.hp*(S.antHp||1),max:bd.hp*(S.antHp||1),
-            armor:0,slow:0,flash:0,ph:Math.random()*6,jumped:false,jump:null,lift:0,spit:1,spawn:{t:SPAWN_DUR,dur:SPAWN_DUR}});
+            armor:0,slow:0,flash:0,ph:Math.random()*6,jumped:false,jump:null,lift:0,spit:1});
         }
         S.fx.push({x:a.x,y:a.y+d.len*.6,t:0,max:.4,kind:'puff'});
       }
@@ -610,12 +622,21 @@ function drawQueen(a){
   ctx.fillStyle='#ff1744';for(const sg of[-1,1]){ctx.beginPath();ctx.arc(x+sg*20,y-2,7,0,7);ctx.fill();}
   ctx.fillStyle='#ffd54f';ctx.beginPath();ctx.moveTo(x-26,y+18);ctx.lineTo(x-26,y-26);ctx.lineTo(x-13,y-8);ctx.lineTo(x,y-34);ctx.lineTo(x+13,y-8);ctx.lineTo(x+26,y-26);ctx.lineTo(x+26,y+18);ctx.closePath();ctx.fill();ctx.strokeStyle='#b8860b';ctx.lineWidth=2;ctx.stroke();
   ctx.restore();
+  if(a.spawn)return;
   const bw=300,by=Math.max(BAR_H+6,y-40);
   ctx.fillStyle='#400';ctx.fillRect(x-bw/2,by,bw,10);ctx.fillStyle='#e44';ctx.fillRect(x-bw/2,by,bw*Math.max(0,a.hp/a.max),10);
   ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.strokeRect(x-bw/2,by,bw,10);
 }
 function drawAnt(a){
-  const render=a.spawn?{...a,y:a.y-SPAWN_RISE*Math.min(1,a.spawn.t/a.spawn.dur)}:a;
+  if(a.spawn){
+    if(a.spawn.t<=0)return;
+    ctx.save();
+    // Soil hides the underground body while the head crawls out first.
+    ctx.beginPath();ctx.rect(0,0,cv.width,HILL_Y);ctx.clip();
+    if(a.wide)drawQueen(a);else drawAntBody(a);
+    ctx.restore();return;
+  }
+  const render=a;
   if(render.wide)return drawQueen(render);
   if(render.jump&&render.jump.dig){ // underground: dirt mound and a trail of dust
     const k=render.jump.t,x=render.x;
@@ -685,7 +706,7 @@ function drawAntBody(a){
     ctx.strokeStyle=armor;ctx.lineWidth=5;ctx.beginPath();ctx.arc(14,0,12,-1.4,1.4);ctx.stroke();}
   if(a.slow>0){ctx.strokeStyle='rgba(149,223,242,.85)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(-2,0,22,0,7);ctx.stroke();}
   ctx.restore();
-  if(a.max>100){ctx.fillStyle='rgba(20,30,25,.75)';roundedRect(x-16,y+18*s,32,5,2);ctx.fill();
+  if(!a.spawn&&a.max>100){ctx.fillStyle='rgba(20,30,25,.75)';roundedRect(x-16,y+18*s,32,5,2);ctx.fill();
     ctx.fillStyle='#e47b61';roundedRect(x-15,y+19*s,30*Math.max(0,a.hp/a.max),3,1);ctx.fill();}
 }
 function laneAt(m){
@@ -701,22 +722,6 @@ function draw(){
     ctx.fillStyle=i%2?'rgba(206,205,134,.08)':'rgba(140,190,125,.1)';
     ctx.beginPath();ctx.ellipse(x,y,2+(i%3),7+(i%4),i*.7,0,7);ctx.fill();
   }
-<<<<<<< HEAD
-  ctx.fillStyle='#5b3a1a';
-  for(let l=0;l<=LANES;l++)ctx.fillRect(GX+l*LW-3,GY,6,LEN);
-  ctx.fillRect(GX-3,BOTTOM-3,LANES*LW+6,0);
-  // marble chute (top, safe line) and exit (bottom, where ants arrive)
-  ctx.fillStyle='#c33';ctx.fillRect(GX-3,GY-10,LANES*LW+6,8);
-  ctx.fillStyle='#fff';ctx.font='bold 12px sans-serif';ctx.textAlign='center';
-  ctx.fillText('▼ MARBLES DROP IN HERE ▼',GX+LANES*LW/2,GY+14);
-  ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(GX,BOTTOM,LANES*LW,40);
-  ctx.fillStyle='#ffd54f';ctx.fillText('EXIT  ▲ ants enter here ▲',GX+LANES*LW/2,BOTTOM+25);
-  for(let l=0;l<LANES;l++){
-    const active=S.ants.some(a=>a.l===l&&a.spawn);
-    drawAntHill(laneX(l),BOTTOM+10,active);
-  }
-  ctx.fillStyle='#ffd54f';ctx.fillText('EXIT  ▲ ants enter here ▲',GX+LANES*LW/2,BOTTOM+25);
-=======
   ctx.save();ctx.shadowColor='rgba(9,22,17,.55)';ctx.shadowBlur=20;ctx.shadowOffsetY=10;
   const frame=ctx.createLinearGradient(0,GY,0,BOTTOM);frame.addColorStop(0,'#c9a16a');frame.addColorStop(.5,'#896140');frame.addColorStop(1,'#503d32');
   ctx.fillStyle=frame;roundedRect(GX-12,GY-8,LANES*LW+24,LEN+18,18);ctx.fill();
@@ -751,7 +756,10 @@ function draw(){
   ctx.fillStyle=exit;roundedRect(GX-3,BOTTOM-2,LANES*LW+6,39,8);ctx.fill();
   ctx.strokeStyle='rgba(224,204,145,.5)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(GX+12,BOTTOM+4);ctx.lineTo(GX+LANES*LW-12,BOTTOM+4);ctx.stroke();
   ctx.fillStyle='#edcf89';ctx.font='bold 12px "Trebuchet MS",sans-serif';ctx.fillText('ANT TRAIL  ·  EXIT',GX+LANES*LW/2,BOTTOM+25);
->>>>>>> feature/2d-graphics-update
+  for(let l=0;l<LANES;l++){
+    const active=S.ants.some(a=>(a.wide||a.l===l)&&a.hp>0&&a.spawn&&a.spawn.t>=0);
+    drawAntHill(laneX(l),HILL_Y,active);
+  }
   if(debug&&S.state==='play'){
     ctx.fillStyle='#222';ctx.fillRect(0,BOTTOM+8,cv.width,cv.height-BOTTOM-8);
     ANT_KEYS.forEach((k,i)=>{const b=antBtn(i);
