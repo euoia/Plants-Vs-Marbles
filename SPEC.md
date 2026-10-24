@@ -2,8 +2,8 @@
 
 A browser tower-defence game in the style of Plants vs Zombies. Ants climb a marble maze from the exit; the player defends by dropping different types of marbles into the maze.
 
-- **Implementation:** single file, [index.html](./index.html) (HTML5 canvas + vanilla JS, no dependencies).
-- **Run:** open `index.html` in any modern browser.
+- **Implementation:** [index.html](./index.html) for game logic and HUD, [render3d.js](./render3d.js) for the Three.js WebGL renderer, and the locally bundled [three.min.js](./three.min.js). The game simulation remains in 2D maze coordinates and is projected onto a 3D tabletop board. Three.js is distributed under the MIT license; see [THREE-LICENSE.txt](./THREE-LICENSE.txt).
+- **Run:** open `index.html` in a modern browser with WebGL enabled. All runtime files are local; no network connection is required.
 
 ## 1. Objective
 
@@ -12,10 +12,11 @@ A browser tower-defence game in the style of Plants vs Zombies. Ants climb a mar
 
 ## 2. Playfield
 
-- Vertical maze of **5 lanes** (100 px wide, 540 px long). Canvas is 900×700.
+- 3D wooden tabletop maze of **5 lanes** (100 px wide, 540 px long), rendered in a 900×700 game view with perspective, lighting, shadows and 3D marble/ant models.
 - **Top:** the marble chute (red line). Marbles are dropped in from here.
 - **Bottom:** the exit, where ants enter. Marbles stop at the exit.
-- Top bar: crumb counter, marble selector (11 slots incl. track pieces), eater, glove.
+- Ants emerge from dirt holes at the far end of the maze before climbing into the lanes.
+- Top bar: crumb counter, marble selector (12 slots including track pieces), eater, glove.
 - Left side: invasion progress bar.
 
 ## 3. Resources — Crumbs
@@ -121,6 +122,10 @@ Campaign is 10 short levels (~1 minute each). Each level starts with an intro sc
 | G | Toggle glove |
 | Right-click / Esc | Cancel selection |
 | P / Pause button (left panel) | Pause / resume (freezes the whole game) |
+| WASD / arrow keys | Move the camera |
+| Mouse wheel | Zoom the camera |
+| Middle-mouse drag | Pan the camera |
+| Shift + middle-mouse drag | Rotate the camera around the board |
 | Click on menu/win/lose screen | Start / restart |
 
 ## 8. Possible future work

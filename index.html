@@ -6,14 +6,16 @@
 <style>
   body{margin:0;background:#2b1d10;color:#fff;font-family:Segoe UI,Arial,sans-serif;display:flex;flex-direction:column;align-items:center}
   h1{margin:8px 0 4px;font-size:22px}
-  canvas{background:#000;border:3px solid #6b4a2a;cursor:default;max-width:100%;max-height:calc(100vh - 110px)}
+  #stage{position:relative;aspect-ratio:900/700;width:min(900px,100%,calc((100vh - 110px)*900/700));border:3px solid #6b4a2a;background:#000;box-sizing:content-box}
+  #stage canvas{position:absolute;left:0;top:0;width:100%;height:100%;cursor:default}
   p{margin:6px;font-size:13px;opacity:.8;text-align:center;max-width:900px}
 </style>
 </head>
 <body>
 <h1>🐜 Ants vs Marbles</h1>
-<canvas id="c" width="900" height="700"></canvas>
-<p>Pick a marble, then click a lane to drop it in from that height (higher = harder landing on ants; heavier marbles hit harder). Marbles roll toward the exit and stop at ants; they pass through each other unless one is being chewed, in which case the ones behind queue up. <b>Track pieces</b>: Ramps slide marbles into the next lane, Rings pay out crumbs every time a marble drops through, Springs bounce them back up toward the top for another drop — click a placed spring to cycle its strength (1–4 bars) and set how high it bounces. Ant Eater (E) sweeps the whole maze clean — then rests 90 s. Collect crumbs by clicking them. Right-click / Esc cancels, G = glove (moves marbles and track pieces).</p>
+<div id="stage"><canvas id="gl" width="900" height="700"></canvas><canvas id="c" width="900" height="700"></canvas></div>
+<p>Defend a 3D tabletop marble maze: choose a marble, then click a lane to drop it from that height. Higher, heavier drops hit harder. Ramps, rings, springs and boosts make marble tracks; the Ant Eater (E) sweeps the maze. Collect crumbs, pause with P, move pieces with the glove (G), or cancel with Esc / right-click. Move the camera with WASD or arrow keys, zoom with the mouse wheel, hold the middle mouse button to pan, or hold Shift while dragging the middle mouse button to rotate. Runs locally with WebGL; no network connection required.</p>
+<script src="three.min.js"></script>
 <script>
 const cv=document.getElementById('c'),ctx=cv.getContext('2d');
 const LANES=5,LW=100,LEN=540,GX=200,GY=110,BAR_H=100;
@@ -202,12 +204,12 @@ function spawnAnt(type,l,n){
   const d=ANTS[type];
   n=n||d.group||1;
   if(d.wide){
-    S.ants.push({type,l:2,wide:true,x:GX+LANES*LW/2,y:BOTTOM+30,hp:d.hp,max:d.hp,armor:0,slow:0,flash:0,ph:0,jumped:false,jump:null,lift:0,spit:1,brood:d.brood});
+    S.ants.push({type,l:2,wide:true,x:GX+LANES*LW/2,y:BOTTOM+30,hp:d.hp,max:d.hp,armor:0,slow:0,flash:0,ph:0,jumped:false,jump:null,lift:0,spit:1,brood:d.brood,emerge:.8});
     return;
   }
   for(let i=0;i<n;i++)
     S.ants.push({type,l,x:laneX(l)+(n>5?((i%3)-1)*16:n>1?(i%2?10:-10):0),y:BOTTOM+30+i*(n>5?12:24),hp:d.hp*(S.antHp||1),max:d.hp*(S.antHp||1),armor:d.armor||0,
-      slow:0,flash:0,ph:Math.random()*6,jumped:false,jump:null,lift:0,spit:1+Math.random(),digs:d.digs||0});
+      slow:0,flash:0,ph:Math.random()*6,jumped:false,jump:null,lift:0,spit:1+Math.random(),digs:d.digs||0,emerge:.8});
 }
 const ANT_KEYS=Object.keys(ANTS);
 const antBtn=i=>({x:4+i*74,y:BOTTOM+14,w:70,h:30});
@@ -316,6 +318,7 @@ function update(dt){
   // ants climb up the lane
   for(const a of S.ants){
     const d=ANTS[a.type];
+    a.emerge=Math.max(0,(a.emerge||0)-dt);
     a.slow=Math.max(0,a.slow-dt);a.flash=Math.max(0,a.flash-dt);a.ph+=dt*8;
     const sp=d.speed*SPD*(S.antSpd||1)*(a.slow>0?.5:1);
     if(a.jump){
@@ -340,7 +343,7 @@ function update(dt){
         for(let i=0;i<d.babies;i++){
           const l=Math.floor(Math.random()*LANES),bd=ANTS.swarm;
           S.ants.push({type:'swarm',l,x:laneX(l)+(Math.random()-.5)*30,y:Math.min(BOTTOM+40,a.y+d.len*.7)+Math.random()*30,hp:bd.hp*(S.antHp||1),max:bd.hp*(S.antHp||1),
-            armor:0,slow:0,flash:0,ph:Math.random()*6,jumped:false,jump:null,lift:0,spit:1});
+            armor:0,slow:0,flash:0,ph:Math.random()*6,jumped:false,jump:null,lift:0,spit:1,emerge:.8});
         }
         S.fx.push({x:a.x,y:a.y+d.len*.6,t:0,max:.4,kind:'puff'});
       }
@@ -512,67 +515,45 @@ function drawAntBody(a){
 }
 function laneAt(m){
   const l=Math.floor((m.x-GX)/LW);
-  return l>=0&&l<LANES&&m.y>=BAR_H&&m.y<=BOTTOM+30?l:-1;
+  return l>=0&&l<LANES&&m.y>=GY-20&&m.y<=BOTTOM+30?l:-1;
+}
+// health bars, floating numbers and crumb labels sit on top of the 3D view, projected to the screen
+function bar(x,y,w,h,f){ctx.fillStyle='#400';ctx.fillRect(x-w/2,y,w,h);ctx.fillStyle='#e44';ctx.fillRect(x-w/2,y,w*Math.max(0,f),h);
+  ctx.strokeStyle='rgba(0,0,0,.7)';ctx.lineWidth=1;ctx.strokeRect(x-w/2-.5,y-.5,w+1,h+1);}
+function drawWorldOverlay(){
+  for(const p of S.plants){
+    const s=toScreen(laneX(p.l)+(p.xo||0),p.y,((p.type==='steel'?26:22)*2+10)*K);
+    if(p.hp<p.max&&p.max>1)bar(s.x,s.y,40,4,p.hp/p.max);
+    if(p.poison>0){ctx.fillStyle='#76ff03';ctx.font='13px sans-serif';ctx.textAlign='center';ctx.fillText('☠',s.x+24,s.y-4);}
+  }
+  for(const a of S.ants){
+    if(a.wide){const s=toScreen(a.x,a.y,3.2);bar(s.x,Math.max(BAR_H+6,s.y-20),300,10,a.hp/a.max);continue;}
+    if(a.jump&&a.jump.dig)continue;
+    const s=toScreen(a.x,a.y,.5+ANTS[a.type].size*.5+(a.lift||0)*K);
+    bar(s.x,s.y,30,3,a.hp/a.max);
+  }
+  for(const f of S.fx)if(f.kind==='dmg'){
+    const k=f.t/f.max,s=toScreen(f.x,f.y,.8);
+    ctx.fillStyle=`rgba(255,235,59,${1-k})`;ctx.strokeStyle=`rgba(0,0,0,${.8*(1-k)})`;ctx.lineWidth=3;
+    ctx.font='bold 18px sans-serif';ctx.textAlign='center';ctx.strokeText(f.text,s.x,s.y-k*30);ctx.fillText(f.text,s.x,s.y-k*30);
+  }
+  for(const d of S.drops){const s=toScreen(d.x,d.ty,dropHeight(d));
+    ctx.fillStyle='#3a2600';ctx.font='bold 14px sans-serif';ctx.textAlign='center';ctx.fillText('25',s.x,s.y+5);}
 }
 function draw(){
   ctx.clearRect(0,0,cv.width,cv.height);
-  ctx.fillStyle='#3a2a18';ctx.fillRect(0,0,cv.width,cv.height);
-  // maze board
-  for(let l=0;l<LANES;l++){
-    ctx.fillStyle=l%2?'#b98b55':'#a97c48';ctx.fillRect(GX+l*LW,GY,LW,LEN);
-    ctx.fillStyle='rgba(0,0,0,.12)';
-    for(let y=GY+60;y<BOTTOM;y+=60)ctx.fillRect(GX+l*LW,y,LW,1);
-  }
-  ctx.fillStyle='#5b3a1a';
-  for(let l=0;l<=LANES;l++)ctx.fillRect(GX+l*LW-3,GY,6,LEN);
-  ctx.fillRect(GX-3,BOTTOM-3,LANES*LW+6,0);
-  // marble chute (top, safe line) and exit (bottom, where ants arrive)
-  ctx.fillStyle='#c33';ctx.fillRect(GX-3,GY-10,LANES*LW+6,8);
-  ctx.fillStyle='#fff';ctx.font='bold 12px sans-serif';ctx.textAlign='center';
-  ctx.fillText('▼ MARBLES DROP IN HERE ▼',GX+LANES*LW/2,GY+14);
-  ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(GX,BOTTOM,LANES*LW,40);
-  ctx.fillStyle='#ffd54f';ctx.fillText('EXIT  ▲ ants enter here ▲',GX+LANES*LW/2,BOTTOM+25);
+  // the maze itself is rendered by render3d() on the canvas underneath; this canvas is the HUD
+  if(S.state==='play'||S.state==='win'||S.state==='lose')drawWorldOverlay();
   if(debug&&S.state==='play'){
-    ctx.fillStyle='#222';ctx.fillRect(0,BOTTOM+8,cv.width,cv.height-BOTTOM-8);
+    ctx.fillStyle='rgba(20,20,20,.85)';ctx.fillRect(0,BOTTOM+8,cv.width,cv.height-BOTTOM-8);
     ANT_KEYS.forEach((k,i)=>{const b=antBtn(i);
       ctx.fillStyle=ANTS[k].color;ctx.fillRect(b.x,b.y,b.w,b.h);
       ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.strokeRect(b.x+.5,b.y+.5,b.w-1,b.h-1);
       ctx.fillStyle='#fff';ctx.font='bold 12px sans-serif';ctx.textAlign='center';ctx.fillText(k,b.x+b.w/2,b.y+19);});
   }
-  // hover
-  if((S.sel||S.glove)&&S.state==='play'){
-    const l=laneAt(S.mouse);
-    if(l>=0){
-      if(S.held){ctx.fillStyle='rgba(255,255,255,.18)';ctx.fillRect(GX+l*LW,GY,LW,LEN);
-        const py=Math.max(SPAWN_Y,Math.min(BOTTOM-60,S.mouse.y));
-        if(S.held.isPiece)drawPiece(S.held.obj.kind,laneX(l),py,.7,S.held.obj);
-        else drawPlant(S.held.obj,laneX(l),py,.7);}
-      else if(S.glove){ctx.fillStyle='rgba(100,200,255,.2)';ctx.fillRect(GX+l*LW,GY,LW,LEN);}
-      else if(S.sel){ctx.fillStyle='rgba(255,255,255,.18)';ctx.fillRect(GX+l*LW,GY,LW,LEN);
-        const py=Math.max(SPAWN_Y,Math.min(BOTTOM-60,S.mouse.y));
-        drawPiecePreview(S.sel,laneX(l),py);}
-    }
-  }
-  for(const s of S.shards){
-    ctx.save();ctx.translate(s.x,s.y);ctx.rotate(s.rot);ctx.globalAlpha=Math.min(1,s.life/5);
-    ctx.fillStyle='rgba(179,229,252,.85)';ctx.strokeStyle='#fff';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(0,-s.sz);ctx.lineTo(s.sz*.7,s.sz*.6);ctx.lineTo(-s.sz*.7,s.sz*.4);ctx.closePath();ctx.fill();ctx.stroke();
-    ctx.restore();
-  }
-  for(const pc of S.pieces)drawPiece(pc.kind,laneX(pc.l),pc.y,1,pc);
-  for(const p of S.plants)drawPlant(p,laneX(p.l)+(p.xo||0),p.y);
-  // draw ants lowest first so upper ones overlap naturally
-  for(const a of S.ants)drawAnt(a);
-  if(S.eater)for(let l=0;l<LANES;l++)drawEater(laneX(l),S.eater.y,1,1);
-  for(const s of S.shots)marble(s.x,s.y,6,s.ice?'#8cf':'#f66');
-  for(const f of S.fx){const k=f.t/f.max;
-    if(f.kind==='boom'){ctx.fillStyle=`rgba(255,${180-k*150|0},0,${1-k})`;ctx.beginPath();ctx.arc(f.x,f.y,40+k*120,0,7);ctx.fill();}
-    else if(f.kind==='spit'){ctx.fillStyle='#76ff03';ctx.beginPath();ctx.arc(f.x+(f.tx-f.x)*k,f.y+(f.ty-f.y)*k,6,0,7);ctx.fill();}
-    else if(f.kind==='dmg'){ctx.fillStyle=`rgba(255,235,59,${1-k})`;ctx.font='bold 18px sans-serif';ctx.textAlign='center';ctx.fillText(f.text,f.x,f.y-k*30);}
-    else{ctx.fillStyle=`rgba(200,200,200,${1-k})`;ctx.beginPath();ctx.arc(f.x,f.y,10+k*20,0,7);ctx.fill();}}
-  for(const d of S.drops){marble(d.x,d.y,14,'#ffd54f');ctx.fillStyle='#000';ctx.font='bold 14px sans-serif';ctx.textAlign='center';ctx.fillText('25',d.x,d.y+5);}
   drawBar();
   // progress (left side)
+  if(S.state==='play'){ctx.fillStyle='rgba(25,14,6,.6)';ctx.fillRect(10,GY+2,168,178);}
   const prog=Math.min(1,S.t/S.endT);
   ctx.fillStyle='#fff';ctx.font='12px sans-serif';ctx.textAlign='left';ctx.fillText('Ant invasion',20,GY+20);
   ctx.fillStyle='#222';ctx.fillRect(20,GY+28,150,12);
@@ -759,7 +740,7 @@ cv.addEventListener('mousedown',e=>{
       if(m.x>=b.x&&m.x<=b.x+b.w&&m.y>=b.y&&m.y<=b.y+b.h){
         const t=ANT_KEYS[i];spawnAnt(t,Math.floor(Math.random()*LANES));return;}}
   }
-  for(const d of S.drops){if(Math.hypot(d.x-m.x,d.y-m.y)<24){S.crumbs+=d.val;d.life=0;return;}}
+  for(const d of S.drops){const s=toScreen(d.x,d.ty,dropHeight(d));if(Math.hypot(s.x-m.x,s.y-m.y)<30){S.crumbs+=d.val;d.life=0;return;}}
   if(m.y<BAR_H){
     for(const k of S.order){const i=S.order.indexOf(k),s=barSlot(i);
       if(m.x>=s.x&&m.x<=s.x+s.w&&m.y>=s.y&&m.y<=s.y+s.h){const was=S.sel===k;cancelMode();S.sel=was?null:k;}}
@@ -767,17 +748,17 @@ cv.addEventListener('mousedown',e=>{
     else if(m.x>=BTN.eater.x)callEater();
     return;
   }
-  const l=laneAt(m);
+  const wm=toWorld(m),l=wm?laneAt(wm):-1;
   if(l<0)return;
   if(S.glove){
-    if(S.held)dropHeld(l,m.y);
+    if(S.held)dropHeld(l,wm.y);
     else{
-      const it=nearestItem(l,m.y);
+      const it=nearestItem(l,wm.y);
       if(it){S.held=it;(it.isPiece?S.pieces:S.plants).splice((it.isPiece?S.pieces:S.plants).indexOf(it.obj),1);}
     }
-  }else if(S.sel){if(place(S.sel,l,m.y))S.sel=null;}
+  }else if(S.sel){if(place(S.sel,l,wm.y))S.sel=null;}
   else{ // no tool active: click a spring to cycle its strength
-    const pc=S.pieces.find(q=>q.kind==='spring'&&q.l===l&&Math.abs(q.y-m.y)<24);
+    const pc=S.pieces.find(q=>q.kind==='spring'&&q.l===l&&Math.abs(q.y-wm.y)<24);
     if(pc){pc.power=(pc.power||4)%4+1;pc.pulse=.3;note('Spring strength '+pc.power+'/4');}
   }
 });
@@ -794,8 +775,10 @@ addEventListener('keydown',e=>{
 
 reset();
 let last=performance.now();
-function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;update(dt);draw();requestAnimationFrame(loop);}
+function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;update(dt);render3d();draw();requestAnimationFrame(loop);}
 requestAnimationFrame(loop);
-</script>
+  </script>
+<script src="render3d.js"></script>
 </body>
+
 </html>
