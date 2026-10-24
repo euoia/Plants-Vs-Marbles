@@ -1,0 +1,186 @@
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+import {
+  cancelSelection,
+  dropHeldItem,
+  findNearestItem,
+  placeItem,
+  toggleGlove,
+} from '../src/game/actions';
+import { GLOVE_COOLDOWN, MIN_DROP_Y, laneCenterX } from '../src/game/constants';
+import { CAMPAIGN_LEVELS } from '../src/game/definitions';
+import { createGame, startGame } from '../src/game/game';
+import { handleKeyDown, handlePointerDown } from '../src/ui/input';
+import { containsPoint, laneAt, toolbarSlot } from '../src/ui/layout';
+import { getIntroductionRows, getMenuButtons } from '../src/ui/menus';
+import { testGame } from './helpers';
+
+function key(game: ReturnType<typeof testGame>, value: string) {
+  let prevented = false;
+  handleKeyDown(game, {
+    key: value,
+    preventDefault: () => {
+      prevented = true;
+    },
+  });
+  return prevented;
+}
+
+test('menu buttons navigate campaign, intro, play, and settings', () => {
+  const game = createGame();
+  getMenuButtons(game)
+    .find((button) => button.label === 'Campaign')
+    ?.onClick();
+  assert.equal(game.state.screen, 'levels');
+  const levels = getMenuButtons(game);
+  assert.equal(levels.filter((button) => !button.locked && button.subtitle).length, 1);
+  levels[0].onClick();
+  assert.equal(game.state.screen, 'intro');
+  assert.ok(getIntroductionRows(CAMPAIGN_LEVELS[0]).length > 0);
+  getMenuButtons(game)[0].onClick();
+  assert.equal(game.state.screen, 'play');
+  assert.deepEqual(game.state.availableItems, ['red']);
+});
+
+test('placement charges crumbs, sets cooldown, clamps height, and rejects repeat purchases', () => {
+  const game = testGame();
+  assert.ok(placeItem(game, 'red', 1, 0));
+  assert.equal(game.state.crumbs, 50);
+  assert.equal(game.state.cooldowns.red, 5);
+  assert.equal(game.state.marbles[0].y, MIN_DROP_Y);
+  assert.equal(placeItem(game, 'red', 1, 200), false);
+  assert.equal(game.state.marbles.length, 1);
+  assert.equal(game.state.crumbs, 50);
+});
+
+test('track placement rejects invalid ramps and crowded pieces without charging', () => {
+  const game = testGame();
+  assert.equal(placeItem(game, 'rampL', 0, 300), false);
+  assert.equal(game.state.crumbs, 150);
+  assert.match(game.state.notification?.text ?? '', /No lane/);
+  assert.ok(placeItem(game, 'spring', 1, 300));
+  assert.equal(placeItem(game, 'boost', 1, 320), false);
+  assert.equal(game.state.crumbs, 75);
+  assert.equal(game.state.trackPieces.length, 1);
+});
+
+test('keyboard selection, pause, cancellation, and debug retain their original bindings', () => {
+  const game = testGame();
+  key(game, '1');
+  assert.equal(game.state.selectedItem, 'gold');
+  key(game, '=');
+  assert.equal(game.state.selectedItem, 'ring');
+  key(game, 'P');
+  assert.equal(game.state.paused, true);
+  key(game, '2');
+  assert.equal(game.state.selectedItem, 'ring');
+  key(game, 'p');
+  key(game, 'Escape');
+  assert.equal(game.state.selectedItem, null);
+  assert.equal(key(game, 'F2'), true);
+  assert.equal(game.debug, true);
+});
+
+test('toolbar clicks toggle selection and a board click places the selected item', () => {
+  const game = testGame();
+  const slot = toolbarSlot(1);
+  handlePointerDown(game, { x: slot.x + 20, y: slot.y + 20 });
+  assert.equal(game.state.selectedItem, 'red');
+  handlePointerDown(game, { x: slot.x + 20, y: slot.y + 20 });
+  assert.equal(game.state.selectedItem, null);
+  key(game, '2');
+  handlePointerDown(game, { x: laneCenterX(1), y: 250 });
+  assert.equal(game.state.marbles[0].type, 'red');
+  assert.equal(game.state.marbles[0].lane, 1);
+  assert.equal(game.state.selectedItem, null);
+});
+
+test('glove returns canceled pickups, and moved marbles gain no new impact damage', () => {
+  const game = testGame();
+  assert.ok(placeItem(game, 'red', 1, 300));
+  const marble = game.state.marbles[0];
+  toggleGlove(game);
+  handlePointerDown(game, { x: laneCenterX(1), y: 300 });
+  assert.equal(game.state.marbles.length, 0);
+  cancelSelection(game);
+  assert.equal(game.state.marbles[0], marble);
+  assert.equal(game.state.gloveCooldown, 0);
+  toggleGlove(game);
+  handlePointerDown(game, { x: laneCenterX(1), y: 300 });
+  dropHeldItem(game, 2, 240);
+  assert.equal(marble.lane, 2);
+  assert.equal(marble.y, 240);
+  assert.equal(marble.isFalling, false);
+  assert.equal(marble.fallDistance, 0);
+  assert.equal(game.state.gloveCooldown, GLOVE_COOLDOWN);
+  assert.equal(game.state.heldItem, null);
+});
+
+test('glove moves track pieces and refuses invalid ramp destinations', () => {
+  const game = testGame();
+  placeItem(game, 'rampL', 1, 300);
+  toggleGlove(game);
+  handlePointerDown(game, { x: laneCenterX(1), y: 300 });
+  dropHeldItem(game, 0, 300);
+  assert.ok(game.state.heldItem);
+  assert.equal(game.state.trackPieces.length, 0);
+  dropHeldItem(game, 2, 350);
+  assert.equal(game.state.trackPieces[0].lane, 2);
+  assert.equal(game.state.trackPieces[0].y, 350);
+  assert.equal(game.state.gloveCooldown, GLOVE_COOLDOWN);
+});
+
+test('nearest-item selection compares marble and track distances', () => {
+  const game = testGame();
+  placeItem(game, 'steel', 0, 300);
+  placeItem(game, 'spring', 0, 310);
+  assert.equal(findNearestItem(game, 0, 305)?.isPiece, false);
+  assert.equal(findNearestItem(game, 0, 308)?.isPiece, true);
+  assert.equal(findNearestItem(game, 1, 300), null);
+});
+
+test('clicking an idle spring cycles its four strength settings', () => {
+  const game = testGame();
+  placeItem(game, 'spring', 0, 300);
+  for (const expected of [1, 2, 3, 4, 1]) {
+    handlePointerDown(game, { x: laneCenterX(0), y: 300 });
+    assert.equal(game.state.trackPieces[0].strength, expected);
+  }
+});
+
+test('crumb pickup and lane/button hit boundaries match the board geometry', () => {
+  const game = testGame();
+  game.state.crumbDrops.push({
+    x: 300,
+    y: 200,
+    targetY: 200,
+    speed: 0,
+    value: 25,
+    lifeRemaining: 10,
+  });
+  handlePointerDown(game, { x: 300, y: 200 });
+  assert.equal(game.state.crumbs, 175);
+  assert.equal(game.state.crumbDrops[0].lifeRemaining, 0);
+  assert.equal(laneAt({ x: 200, y: 110 }), 0);
+  assert.equal(laneAt({ x: 699, y: 650 }), 4);
+  assert.equal(laneAt({ x: 700, y: 650 }), -1);
+  assert.ok(containsPoint({ x: 10, y: 20 }, { x: 0, y: 0, width: 10, height: 20 }));
+});
+
+test('separate games do not share mutable state, progress, or cooldowns', () => {
+  const first = testGame();
+  const second = testGame();
+  placeItem(first, 'red', 0, 300);
+  first.preferences.unlockedLevels = 10;
+  startGame(first, 'campaign', 9);
+  assert.equal(second.state.screen, 'play');
+  assert.equal(second.state.marbles.length, 0);
+  assert.equal(second.state.cooldowns.red, 0);
+  assert.equal(second.preferences.unlockedLevels, 1);
+  first.state.availableItems.pop();
+  startGame(second, 'campaign', 9);
+  assert.deepEqual(second.state.availableItems, CAMPAIGN_LEVELS[9].availableItems);
+  assert.notDeepEqual(first.state.availableItems, second.state.availableItems);
+  startGame(first, 'campaign', 9);
+  assert.deepEqual(first.state.availableItems, second.state.availableItems);
+});

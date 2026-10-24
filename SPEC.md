@@ -2,8 +2,8 @@
 
 A browser tower-defence game in the style of Plants vs Zombies. Ants climb a marble maze from the exit; the player defends by dropping different types of marbles into the maze.
 
-- **Implementation:** single file, [index.html](./index.html) (HTML5 canvas + vanilla JS, no dependencies).
-- **Run:** open `index.html` in any modern browser.
+- **Implementation:** HTML5 canvas with vanilla TypeScript modules and Vite; no runtime framework or dependencies.
+- **Run:** `npm ci`, then `npm run dev`. See [README.md](./README.md) for setup, code organization, testing, and production builds. Opening the source HTML directly is no longer supported.
 
 ## 1. Objective
 
@@ -28,15 +28,15 @@ A browser tower-defence game in the style of Plants vs Zombies. Ants climb a mar
 
 Each marble has a cost, health, cooldown (after placing one, that type is unavailable for a while) and a mass used for drop damage.
 
-| Marble | Key | Cost | HP | Cooldown | Mass | Behaviour |
-|---|---|---|---|---|---|---|
-| Gold | 1 | 50 | 100 | 5 s | 3 | Drops a 25-crumb pickup every 10 s |
-| Shooter | 2 | 100 | 100 | 5 s | 3 | Fires a shot (25 dmg) down its lane every 1.4 s while an ant is below it |
-| Frost | 3 | 175 | 100 | 5 s | 3 | Like Shooter, 20 dmg and slows the ant 50% for 3 s |
-| Twin | 4 | 200 | 100 | 5 s | 5 | Fires two shots (25 dmg each) per volley |
-| Steel | 5 | 50 | 900 | 15 s | 8 | Tough wall, heaviest drop damage |
-| Bomb | 6 | 150 | 1 | 25 s | 2 | Explodes 0.8 s after touching an ant (or immediately if killed): kills every ant (including boss and armored) within 1.6 lanes sideways and 130 px vertically |
-| Glass | 7 | 75 | 1 | 8 s | 4 | Shatters the moment it stops (lands on an ant or reaches the exit), doing normal drop damage. Leaves 8 shards across the lane; each cuts ants crawling over it for 14 dmg/s (ignores armor), lasts 30 s and wears out after dealing 90 damage |
+| Marble  | Key | Cost | HP  | Cooldown | Mass | Behaviour                                                                                                                                                                                                                                     |
+| ------- | --- | ---- | --- | -------- | ---- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Gold    | 1   | 50   | 100 | 5 s      | 3    | Drops a 25-crumb pickup every 10 s                                                                                                                                                                                                            |
+| Shooter | 2   | 100  | 100 | 5 s      | 3    | Fires a shot (25 dmg) down its lane every 1.4 s while an ant is below it                                                                                                                                                                      |
+| Frost   | 3   | 175  | 100 | 5 s      | 3    | Like Shooter, 20 dmg and slows the ant 50% for 3 s                                                                                                                                                                                            |
+| Twin    | 4   | 200  | 100 | 5 s      | 5    | Fires two shots (25 dmg each) per volley                                                                                                                                                                                                      |
+| Steel   | 5   | 50   | 900 | 15 s     | 8    | Tough wall, heaviest drop damage                                                                                                                                                                                                              |
+| Bomb    | 6   | 150  | 1   | 25 s     | 2    | Explodes 0.8 s after touching an ant (or immediately if killed): kills every ant (including boss and armored) within 1.6 lanes sideways and 130 px vertically                                                                                 |
+| Glass   | 7   | 75   | 1   | 8 s      | 4    | Shatters the moment it stops (lands on an ant or reaches the exit), doing normal drop damage. Leaves 8 shards across the lane; each cuts ants crawling over it for 14 dmg/s (ignores armor), lasts 30 s and wears out after dealing 90 damage |
 
 ### 4.1 Placing and rolling
 
@@ -62,12 +62,12 @@ Toggle with the glove button or **G**. Click a marble or track piece to pick it 
 
 Placed in a lane at the clicked height (same selector bar, keys 8, 9, 0 and -). Ants ignore them. Pieces trigger every time a marble passes over them while moving downward, so marbles can loop through a route indefinitely (e.g. ramp right → ramp left → spring). A piece re-arms for a marble once it has moved away from it.
 
-| Piece | Key | Cost | Cooldown | Effect |
-|---|---|---|---|---|
-| Spring | 8 | 75 | 2 s | Launches a marble back up to the top of the maze; it then falls again and gets a fresh drop for impact damage |
-| Ramp ◀ | 9 | 25 | 1 s | Slides a marble into the lane to the left (not placeable in the leftmost lane) |
-| Ramp ▶ | 0 | 25 | 1 s | Slides a marble into the lane to the right (not placeable in the rightmost lane) |
-| Boost | - | 60 | 2 s | Accelerates a marble to 720 px/s (normal max 420) until it stops. A boosted marble that hits an ant gets +250 px of effective fall distance and ×1.5 impact damage |
+| Piece  | Key | Cost | Cooldown | Effect                                                                                                                                                             |
+| ------ | --- | ---- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Spring | 8   | 75   | 2 s      | Launches a marble back up to the top of the maze; it then falls again and gets a fresh drop for impact damage                                                      |
+| Ramp ◀ | 9   | 25   | 1 s      | Slides a marble into the lane to the left (not placeable in the leftmost lane)                                                                                     |
+| Ramp ▶ | 0   | 25   | 1 s      | Slides a marble into the lane to the right (not placeable in the rightmost lane)                                                                                   |
+| Boost  | -   | 60   | 2 s      | Accelerates a marble to 720 px/s (normal max 420) until it stops. A boosted marble that hits an ant gets +250 px of effective fall distance and ×1.5 impact damage |
 
 Pieces can be chained to build routes and loops (e.g. ramp across, spring back up). Pieces can't be placed within 44 px of another piece in the same lane.
 
@@ -81,20 +81,20 @@ Pieces can be chained to build routes and loops (e.g. ramp across, spring back u
 
 Ants spawn head-first from a visible ant hill below the exit in a random lane, with soil hiding the underground body. Packs emerge one after another from the same hill rather than starting off-screen. Emergence takes 0.95 s (1.8 s for the giant Queen), then continues smoothly into climbing without resetting position. Emerging ants do not attack, block marbles, or take damage from shots, bombs, or shards; the Ant Eater can still eat them. The Queen's babies appear beside her rather than at the hills. When a marble blocks them they chew it (damage per second = `dmg`). Speeds below are in px/s before the global 0.8 speed scale.
 
-| Ant | HP | Speed | DPS | Notes |
-|---|---|---|---|---|
-| Basic | 100 | 9 | 20 | Standard |
-| Fast | 60 | 18 | 15 | Small, quick |
-| Tank | 350 | 6 | 25 | Large |
-| Jumper (green) | 80 | 11 | 18 | Leaps over the first marble it meets (once) |
-| Armored (grey) | 150 + 150 armor | 7 | 22 | Shots damage armor first (at 60%); bombs and drop damage ignore armor |
-| Spitter (blue, shiny) | 90 | 8 | 15 | Stops 210 px away from a marble and spits venom every 2 s: 12 dmg + poison (7 dmg/s for 4 s) |
-| Red | 600 | 3.5 | 90 | Huge, very slow, devastating bite |
-| Swarm (brown) | 30 | 14 | 8 | Tiny; arrives in packs of 5 |
-| Mite (tan) | 14 | 26 | 5 | Very small and fast; arrives in packs of 9 (free play from the ~9th ant) |
-| Digger (clay) | 110 | 10 | 20 | When blocked by a marble it burrows for 1.4 s (immune to shots, bombs, shards, and passes under marbles) and resurfaces 170 px further up; can dig twice (free play from the ~15th ant) |
-| Boss | 1500 | 4 | 60 | Used as the campaign finale |
-| Queen | 6000 | 3 | 70 per lane | Free-play finale: spans all 5 lanes, chews a marble in every lane at once, spawns 3 swarm babies every 5 s (max 45 ants on screen). Bombs deal 500, the Ant Eater 1200 (once per sweep), instead of killing her outright |
+| Ant                   | HP              | Speed | DPS         | Notes                                                                                                                                                                                                                    |
+| --------------------- | --------------- | ----- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Basic                 | 100             | 9     | 20          | Standard                                                                                                                                                                                                                 |
+| Fast                  | 60              | 18    | 15          | Small, quick                                                                                                                                                                                                             |
+| Tank                  | 350             | 6     | 25          | Large                                                                                                                                                                                                                    |
+| Jumper (green)        | 80              | 11    | 18          | Leaps over the first marble it meets (once)                                                                                                                                                                              |
+| Armored (grey)        | 150 + 150 armor | 7     | 22          | Shots damage armor first (at 60%); bombs and drop damage ignore armor                                                                                                                                                    |
+| Spitter (blue, shiny) | 90              | 8     | 15          | Stops 210 px away from a marble and spits venom every 2 s: 12 dmg + poison (7 dmg/s for 4 s)                                                                                                                             |
+| Red                   | 600             | 3.5   | 90          | Huge, very slow, devastating bite                                                                                                                                                                                        |
+| Swarm (brown)         | 30              | 14    | 8           | Tiny; arrives in packs of 5                                                                                                                                                                                              |
+| Mite (tan)            | 14              | 26    | 5           | Very small and fast; arrives in packs of 9 (free play from the ~9th ant)                                                                                                                                                 |
+| Digger (clay)         | 110             | 10    | 20          | When blocked by a marble it burrows for 1.4 s (immune to shots, bombs, shards, and passes under marbles) and resurfaces 170 px further up; can dig twice (free play from the ~15th ant)                                  |
+| Boss                  | 1500            | 4     | 60          | Used as the campaign finale                                                                                                                                                                                              |
+| Queen                 | 6000            | 3     | 70 per lane | Free-play finale: spans all 5 lanes, chews a marble in every lane at once, spawns 3 swarm babies every 5 s (max 45 ants on screen). Bombs deal 500, the Ant Eater 1200 (once per sweep), instead of killing her outright |
 
 Slowed ants move at half speed.
 
@@ -114,16 +114,16 @@ Campaign is 10 short levels (~1 minute each). Each level starts with an intro sc
 
 ## 7. Controls
 
-| Input | Action |
-|---|---|
-| Click bar slot / keys 1–9, 0, - | Select marble or track piece |
-| E / Ant Eater button | Call the Ant Eater |
-| Click lane | Drop selected marble |
-| Click crumb | Collect |
-| G | Toggle glove |
-| Right-click / Esc | Cancel selection |
-| P / Pause button (left panel) | Pause / resume (freezes the whole game) |
-| Click on menu/win/lose screen | Start / restart |
+| Input                           | Action                                  |
+| ------------------------------- | --------------------------------------- |
+| Click bar slot / keys 1–9, 0, - | Select marble or track piece            |
+| E / Ant Eater button            | Call the Ant Eater                      |
+| Click lane                      | Drop selected marble                    |
+| Click crumb                     | Collect                                 |
+| G                               | Toggle glove                            |
+| Right-click / Esc               | Cancel selection                        |
+| P / Pause button (left panel)   | Pause / resume (freezes the whole game) |
+| Click on menu/win/lose screen   | Start / restart                         |
 
 ## 8. Possible future work
 

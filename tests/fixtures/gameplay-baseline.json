@@ -1,0 +1,3070 @@
+{
+  "sourceCommit": "ec90369",
+  "seed": 123456,
+  "spawn": {
+    "basic": [
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 2,
+            "x": 450,
+            "y": 690,
+            "health": 100,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 2,
+            "x": 450,
+            "y": 683.1418574136171,
+            "health": 100,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 2,
+            "x": 450,
+            "y": 629.712,
+            "health": 100,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 2,
+            "x": 450,
+            "y": 610.9919999999993,
+            "health": 100,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "fast": [
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "fast",
+            "lane": 2,
+            "x": 450,
+            "y": 684,
+            "health": 60,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "fast",
+            "lane": 2,
+            "x": 450,
+            "y": 678.5134859308937,
+            "health": 60,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "fast",
+            "lane": 2,
+            "x": 450,
+            "y": 635.424,
+            "health": 60,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "fast",
+            "lane": 2,
+            "x": 450,
+            "y": 597.9839999999986,
+            "health": 60,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "tank": [
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "tank",
+            "lane": 2,
+            "x": 450,
+            "y": 699,
+            "health": 350,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "tank",
+            "lane": 2,
+            "x": 450,
+            "y": 690.0844146377023,
+            "health": 350,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "tank",
+            "lane": 2,
+            "x": 450,
+            "y": 620.808,
+            "health": 350,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "tank",
+            "lane": 2,
+            "x": 450,
+            "y": 608.3279999999995,
+            "health": 350,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "boss": [
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "boss",
+            "lane": 2,
+            "x": 450,
+            "y": 714,
+            "health": 1500,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "boss",
+            "lane": 2,
+            "x": 450,
+            "y": 701.6553433445108,
+            "health": 1500,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "boss",
+            "lane": 2,
+            "x": 450,
+            "y": 605.8720000000001,
+            "health": 1500,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "boss",
+            "lane": 2,
+            "x": 450,
+            "y": 597.5520000000047,
+            "health": 1500,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "queen": [
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "queen",
+            "lane": 2,
+            "x": 450,
+            "y": 735,
+            "health": 6000,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "queen",
+            "lane": 2,
+            "x": 450,
+            "y": 724.9519890260631,
+            "health": 6000,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "queen",
+            "lane": 2,
+            "x": 450,
+            "y": 564.1838134430726,
+            "health": 6000,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "queen",
+            "lane": 2,
+            "x": 450,
+            "y": 437.67999999999984,
+            "health": 6000,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "jumper": [
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "jumper",
+            "lane": 2,
+            "x": 450,
+            "y": 687,
+            "health": 80,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "jumper",
+            "lane": 2,
+            "x": 450,
+            "y": 680.8276716722554,
+            "health": 80,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "jumper",
+            "lane": 2,
+            "x": 450,
+            "y": 632.6479999999999,
+            "health": 80,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "jumper",
+            "lane": 2,
+            "x": 450,
+            "y": 609.7679999999941,
+            "health": 80,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "armored": [
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "armored",
+            "lane": 2,
+            "x": 450,
+            "y": 693,
+            "health": 150,
+            "armor": 150,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "armored",
+            "lane": 2,
+            "x": 450,
+            "y": 685.4560431549788,
+            "health": 150,
+            "armor": 150,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "armored",
+            "lane": 2,
+            "x": 450,
+            "y": 626.7760000000001,
+            "health": 150,
+            "armor": 150,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "armored",
+            "lane": 2,
+            "x": 450,
+            "y": 612.2160000000044,
+            "health": 150,
+            "armor": 150,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "spitter": [
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "spitter",
+            "lane": 2,
+            "x": 450,
+            "y": 690,
+            "health": 90,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "spitter",
+            "lane": 2,
+            "x": 450,
+            "y": 683.1418574136171,
+            "health": 90,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "spitter",
+            "lane": 2,
+            "x": 450,
+            "y": 629.7439999999999,
+            "health": 90,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "spitter",
+            "lane": 2,
+            "x": 450,
+            "y": 613.1039999999944,
+            "health": 90,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "red": [
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "red",
+            "lane": 2,
+            "x": 450,
+            "y": 711,
+            "health": 600,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "red",
+            "lane": 2,
+            "x": 450,
+            "y": 699.3411576031491,
+            "health": 600,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "red",
+            "lane": 2,
+            "x": 450,
+            "y": 608.8879999999999,
+            "health": 600,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "red",
+            "lane": 2,
+            "x": 450,
+            "y": 601.6079999999947,
+            "health": 600,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "swarm": [
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 440,
+            "y": 676.5,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 460,
+            "y": 676.5,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 440,
+            "y": 676.5,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 460,
+            "y": 676.5,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 440,
+            "y": 676.5,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 440,
+            "y": 672.7280215774895,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 460,
+            "y": 676.5,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 440,
+            "y": 676.5,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 460,
+            "y": 676.5,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 440,
+            "y": 676.5,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 440,
+            "y": 643.0519999999999,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 460,
+            "y": 646.2919953345969,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 440,
+            "y": 655.6183274529815,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 460,
+            "y": 666.8448129464937,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 440,
+            "y": 675.0534077853914,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 440,
+            "y": 613.9319999999939,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 460,
+            "y": 616.3959999999944,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 440,
+            "y": 618.8599999999949,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 460,
+            "y": 621.3239999999954,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          },
+          {
+            "type": "swarm",
+            "lane": 2,
+            "x": 440,
+            "y": 623.7879999999959,
+            "health": 30,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "mite": [
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 434,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 450,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 466,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 434,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 450,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 466,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 434,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 450,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 466,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 434,
+            "y": 668.7939058171745,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 450,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 466,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 434,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 450,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 466,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 434,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 450,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 466,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 434,
+            "y": 647.7679999999999,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 450,
+            "y": 650.5290149584488,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 466,
+            "y": 656.9726626038781,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 434,
+            "y": 664.7291434903046,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 450,
+            "y": 670.4005362880886,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 466,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 434,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 450,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 466,
+            "y": 671.4,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 434,
+            "y": 593.6879999999929,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 450,
+            "y": 598.2639999999935,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 466,
+            "y": 602.8399999999941,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 434,
+            "y": 607.4159999999947,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 450,
+            "y": 611.9919999999953,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 466,
+            "y": 616.5679999999959,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 434,
+            "y": 621.1439999999965,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 450,
+            "y": 625.7199999999971,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          },
+          {
+            "type": "mite",
+            "lane": 2,
+            "x": 466,
+            "y": 630.2959999999977,
+            "health": 14,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "digger": [
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "digger",
+            "lane": 2,
+            "x": 450,
+            "y": 690,
+            "health": 110,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "digger",
+            "lane": 2,
+            "x": 450,
+            "y": 683.1418574136171,
+            "health": 110,
+            "armor": 0,
+            "slow": 0,
+            "emerging": true,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "digger",
+            "lane": 2,
+            "x": 450,
+            "y": 629.6800000000001,
+            "health": 110,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 150,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "digger",
+            "lane": 2,
+            "x": 450,
+            "y": 608.8800000000042,
+            "health": 110,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ]
+  },
+  "campaign": [
+    {
+      "items": ["red"],
+      "crumbs": 400,
+      "queue": [
+        [5, "basic"],
+        [8.97317277673632, "basic"],
+        [13.828363864086569, "basic"],
+        [17.194022118225696, "basic"],
+        [21.09780861504376, "basic"],
+        [25.114198292754594, "basic"]
+      ],
+      "invasionDuration": 29.653044271506374,
+      "healthMultiplier": 0.55,
+      "abilities": {
+        "glove": true,
+        "eater": false
+      }
+    },
+    {
+      "items": ["red", "gold"],
+      "crumbs": 440,
+      "queue": [
+        [5, "fast"],
+        [8.802893943447621, "fast"],
+        [13.450005412768576, "fast"],
+        [16.67142117030174, "fast"],
+        [20.40790253154189, "fast"],
+        [24.252161223065116, "fast"]
+      ],
+      "invasionDuration": 28.596485231298963,
+      "healthMultiplier": 0.6,
+      "abilities": {
+        "glove": true,
+        "eater": false
+      }
+    },
+    {
+      "items": ["red", "gold", "steel"],
+      "crumbs": 480,
+      "queue": [
+        [5, "tank"],
+        [8.632615110158921, "tank"],
+        [13.071646961450579, "tank"],
+        [16.14882022237778, "fast"],
+        [19.71799644804001, "tank"],
+        [23.39012415337563, "tank"],
+        [27.539926191091542, "tank"]
+      ],
+      "invasionDuration": 31.3531916217804,
+      "healthMultiplier": 0.7,
+      "abilities": {
+        "glove": true,
+        "eater": true
+      }
+    },
+    {
+      "items": ["red", "gold", "steel", "blue"],
+      "crumbs": 520,
+      "queue": [
+        [5, "jumper"],
+        [8.462336276870221, "jumper"],
+        [12.693288510132582, "jumper"],
+        [15.62621927445382, "tank"],
+        [19.028090364538134, "jumper"],
+        [22.528087083686145, "jumper"],
+        [26.483367150884124, "tank"],
+        [30.11788576450944, "basic"]
+      ],
+      "invasionDuration": 34.45273175917566,
+      "healthMultiplier": 0.7,
+      "abilities": {
+        "glove": true,
+        "eater": true
+      }
+    },
+    {
+      "items": ["red", "gold", "steel", "blue", "rampL", "rampR", "spring"],
+      "crumbs": 560,
+      "queue": [
+        [5, "swarm"],
+        [8.292057443581522, "swarm"],
+        [12.314930058814586, "swarm"],
+        [15.103618326529862, "tank"],
+        [18.33818428103626, "swarm"],
+        [21.666050013996664, "swarm"],
+        [25.42680811067671, "jumper"],
+        [28.882579907238487, "fast"]
+      ],
+      "invasionDuration": 33.00423675462604,
+      "healthMultiplier": 0.75,
+      "abilities": {
+        "glove": true,
+        "eater": true
+      }
+    },
+    {
+      "items": ["red", "gold", "steel", "blue", "rampL", "rampR", "spring", "bomb"],
+      "crumbs": 600,
+      "queue": [
+        [5, "armored"],
+        [8.121778610292822, "armored"],
+        [11.936571607496589, "armored"],
+        [14.581017378605901, "tank"],
+        [17.64827819753438, "armored"],
+        [20.80401294430718, "armored"],
+        [24.370249070469292, "jumper"],
+        [27.64727404996753, "fast"],
+        [31.555741750076415, "armored"]
+      ],
+      "invasionDuration": 34.976897164750845,
+      "healthMultiplier": 0.8,
+      "abilities": {
+        "glove": true,
+        "eater": true
+      }
+    },
+    {
+      "items": [
+        "red",
+        "gold",
+        "steel",
+        "blue",
+        "rampL",
+        "rampR",
+        "spring",
+        "bomb",
+        "glass",
+        "boost"
+      ],
+      "crumbs": 640,
+      "queue": [
+        [5, "spitter"],
+        [7.951499777004123, "spitter"],
+        [11.558213156178594, "armored"],
+        [14.058416430681945, "jumper"],
+        [16.958372114032507, "spitter"],
+        [19.941975874617697, "spitter"],
+        [23.313690030261874, "swarm"],
+        [26.41196819269657, "fast"],
+        [30.10724674552679, "spitter"],
+        [33.34179368303716, "fast"]
+      ],
+      "invasionDuration": 36.312013930931684,
+      "healthMultiplier": 0.95,
+      "abilities": {
+        "glove": true,
+        "eater": true
+      }
+    },
+    {
+      "items": [
+        "red",
+        "gold",
+        "steel",
+        "blue",
+        "rampL",
+        "rampR",
+        "spring",
+        "bomb",
+        "glass",
+        "boost",
+        "twin",
+        "ring"
+      ],
+      "crumbs": 680,
+      "queue": [
+        [5, "red"],
+        [7.781220943715423, "red"],
+        [11.179854704860599, "spitter"],
+        [13.535815482757988, "jumper"],
+        [16.268466030530632, "red"],
+        [19.079938804928215, "red"],
+        [22.25713099005446, "swarm"],
+        [25.17666233542562, "fast"],
+        [28.658751740977173, "red"],
+        [31.706690201323486, "fast"],
+        [34.50555158876256, "jumper"]
+      ],
+      "invasionDuration": 37.393676309205595,
+      "healthMultiplier": 1.1,
+      "abilities": {
+        "glove": true,
+        "eater": true
+      }
+    },
+    {
+      "items": [
+        "red",
+        "gold",
+        "steel",
+        "blue",
+        "rampL",
+        "rampR",
+        "spring",
+        "bomb",
+        "glass",
+        "boost",
+        "twin",
+        "ring"
+      ],
+      "crumbs": 720,
+      "queue": [
+        [5, "red"],
+        [7.610942110426724, "red"],
+        [10.801496253542602, "armored"],
+        [13.013214534834027, "tank"],
+        [15.578559947028756, "armored"],
+        [18.21790173523873, "armored"],
+        [21.200571949847042, "jumper"],
+        [23.94135647815466, "fast"],
+        [27.210256736427546, "spitter"],
+        [30.071586719609797, "fast"],
+        [32.69908924659342, "jumper"],
+        [35.410390004560355, "spitter"],
+        [37.845383386537435, "fast"]
+      ],
+      "invasionDuration": 40.990685131929816,
+      "healthMultiplier": 1.25,
+      "abilities": {
+        "glove": true,
+        "eater": true
+      }
+    },
+    {
+      "items": [
+        "red",
+        "gold",
+        "steel",
+        "blue",
+        "rampL",
+        "rampR",
+        "spring",
+        "bomb",
+        "glass",
+        "boost",
+        "twin",
+        "ring"
+      ],
+      "crumbs": 760,
+      "queue": [
+        [5, "red"],
+        [7.4595831475034355, "red"],
+        [10.465177630148828, "armored"],
+        [12.54868035890162, "tank"],
+        [14.965310095027089, "armored"],
+        [17.451646562181413, "armored"],
+        [20.261408358551563, "jumper"],
+        [22.843306827247144, "fast"],
+        [25.92270562127233, "spitter"],
+        [28.618161402530973, "fast"],
+        [31.09334494244308, "jumper"],
+        [33.6474688448757, "spitter"],
+        [35.94130319021642, "fast"],
+        [38.90426860254258, "swarm"],
+        [45.19908256996423, "boss"]
+      ],
+      "invasionDuration": 45.19908256996423,
+      "healthMultiplier": 1.3,
+      "abilities": {
+        "glove": true,
+        "eater": true
+      }
+    }
+  ],
+  "marbles": {
+    "gold": [
+      {
+        "crumbs": 9949,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "gold",
+            "lane": 0,
+            "y": 155,
+            "health": 100,
+            "velocityY": 100,
+            "fallDistance": 5,
+            "falling": true,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 449.64,
+            "health": 3000,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9949,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "gold",
+            "lane": 0,
+            "y": 417.5,
+            "health": 97,
+            "velocityY": 75,
+            "fallDistance": 267.5,
+            "falling": false,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 443.87999999999977,
+            "health": 2992,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9949,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "gold",
+            "lane": 0,
+            "y": 417.5,
+            "health": 57,
+            "velocityY": 75,
+            "fallDistance": 267.5,
+            "falling": false,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 443.87999999999977,
+            "health": 2992,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9949,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 442.7999999999997,
+            "health": 2992,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [
+          {
+            "kind": "marble",
+            "x": 250,
+            "y": 417.5,
+            "elapsed": 0.15000000000000002
+          }
+        ],
+        "drops": []
+      },
+      {
+        "crumbs": 9949,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 399.5999999999981,
+            "health": 2992,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "red": [
+      {
+        "crumbs": 9899,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "red",
+            "lane": 0,
+            "y": 155,
+            "health": 100,
+            "velocityY": 100,
+            "fallDistance": 5,
+            "falling": true,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 449.64,
+            "health": 3000,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9899,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "red",
+            "lane": 0,
+            "y": 417.5,
+            "health": 97,
+            "velocityY": 75,
+            "fallDistance": 267.5,
+            "falling": false,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 443.87999999999977,
+            "health": 2992,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9899,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "red",
+            "lane": 0,
+            "y": 417.5,
+            "health": 57,
+            "velocityY": 75,
+            "fallDistance": 267.5,
+            "falling": false,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 443.87999999999977,
+            "health": 2942,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9899,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 442.7999999999997,
+            "health": 2892,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [
+          {
+            "kind": "marble",
+            "x": 250,
+            "y": 417.5,
+            "elapsed": 0.15000000000000002
+          }
+        ],
+        "drops": []
+      },
+      {
+        "crumbs": 9899,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 399.5999999999981,
+            "health": 2892,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "blue": [
+      {
+        "crumbs": 9824,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "blue",
+            "lane": 0,
+            "y": 155,
+            "health": 100,
+            "velocityY": 100,
+            "fallDistance": 5,
+            "falling": true,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 449.64,
+            "health": 3000,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9824,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "blue",
+            "lane": 0,
+            "y": 417.5,
+            "health": 97,
+            "velocityY": 75,
+            "fallDistance": 267.5,
+            "falling": false,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 443.87999999999977,
+            "health": 2992,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9824,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "blue",
+            "lane": 0,
+            "y": 417.5,
+            "health": 57,
+            "velocityY": 75,
+            "fallDistance": 267.5,
+            "falling": false,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 443.87999999999977,
+            "health": 2952,
+            "armor": 0,
+            "slow": 2.750000000000001,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9824,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 443.33999999999975,
+            "health": 2912,
+            "armor": 0,
+            "slow": 2.5500000000000016,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [
+          {
+            "kind": "marble",
+            "x": 250,
+            "y": 417.5,
+            "elapsed": 0.15000000000000002
+          }
+        ],
+        "drops": []
+      },
+      {
+        "crumbs": 9824,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 409.31999999999846,
+            "health": 2912,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "twin": [
+      {
+        "crumbs": 9799,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "twin",
+            "lane": 0,
+            "y": 155,
+            "health": 100,
+            "velocityY": 100,
+            "fallDistance": 5,
+            "falling": true,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 449.64,
+            "health": 3000,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9799,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "twin",
+            "lane": 0,
+            "y": 417.5,
+            "health": 97,
+            "velocityY": 75,
+            "fallDistance": 267.5,
+            "falling": false,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 443.87999999999977,
+            "health": 2987,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9799,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "twin",
+            "lane": 0,
+            "y": 417.5,
+            "health": 57,
+            "velocityY": 75,
+            "fallDistance": 267.5,
+            "falling": false,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 443.87999999999977,
+            "health": 2937,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9799,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 442.7999999999997,
+            "health": 2887,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [
+          {
+            "kind": "marble",
+            "x": 250,
+            "y": 417.5,
+            "elapsed": 0.15000000000000002
+          }
+        ],
+        "drops": []
+      },
+      {
+        "crumbs": 9799,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 399.5999999999981,
+            "health": 2887,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "steel": [
+      {
+        "crumbs": 9949,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "steel",
+            "lane": 0,
+            "y": 155,
+            "health": 900,
+            "velocityY": 100,
+            "fallDistance": 5,
+            "falling": true,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 449.64,
+            "health": 3000,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9949,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "steel",
+            "lane": 0,
+            "y": 417.5,
+            "health": 897,
+            "velocityY": 75,
+            "fallDistance": 267.5,
+            "falling": false,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 443.87999999999977,
+            "health": 2979,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9949,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "steel",
+            "lane": 0,
+            "y": 417.5,
+            "health": 857,
+            "velocityY": 75,
+            "fallDistance": 267.5,
+            "falling": false,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 443.87999999999977,
+            "health": 2979,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9949,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "steel",
+            "lane": 0,
+            "y": 417.5,
+            "health": 797,
+            "velocityY": 75,
+            "fallDistance": 267.5,
+            "falling": false,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 443.87999999999977,
+            "health": 2979,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9949,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "steel",
+            "lane": 0,
+            "y": 417.5,
+            "health": 677,
+            "velocityY": 75,
+            "fallDistance": 267.5,
+            "falling": false,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 443.87999999999977,
+            "health": 2979,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "bomb": [
+      {
+        "crumbs": 9849,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "bomb",
+            "lane": 0,
+            "y": 155,
+            "health": 1,
+            "velocityY": 100,
+            "fallDistance": 5,
+            "falling": true,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 449.64,
+            "health": 3000,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9849,
+        "screen": "play",
+        "marbles": [],
+        "ants": [],
+        "shots": [],
+        "shards": [],
+        "deaths": [
+          {
+            "kind": "marble",
+            "x": 250,
+            "y": 417.5,
+            "elapsed": 0.1
+          },
+          {
+            "kind": "ant",
+            "x": 250,
+            "y": 443.87999999999977,
+            "elapsed": 0.1
+          }
+        ],
+        "drops": []
+      },
+      {
+        "crumbs": 9849,
+        "screen": "play",
+        "marbles": [],
+        "ants": [],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9849,
+        "screen": "play",
+        "marbles": [],
+        "ants": [],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9849,
+        "screen": "play",
+        "marbles": [],
+        "ants": [],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      }
+    ],
+    "glass": [
+      {
+        "crumbs": 9924,
+        "screen": "play",
+        "marbles": [
+          {
+            "type": "glass",
+            "lane": 0,
+            "y": 155,
+            "health": 1,
+            "velocityY": 100,
+            "fallDistance": 5,
+            "falling": true,
+            "boosted": false
+          }
+        ],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 449.64,
+            "health": 3000,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9924,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 443.15999999999974,
+            "health": 2988.3,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [
+          {
+            "x": 281.08529599383473,
+            "y": 446.99973474256694,
+            "life": 29.95,
+            "durability": 90
+          },
+          {
+            "x": 239.62214866653085,
+            "y": 418.6841219291091,
+            "life": 29.95,
+            "durability": 90
+          },
+          {
+            "x": 266.42313407734036,
+            "y": 437.58470174856484,
+            "life": 29.95,
+            "durability": 89.3
+          },
+          {
+            "x": 221.8550925888121,
+            "y": 450.5480189435184,
+            "life": 29.95,
+            "durability": 90
+          },
+          {
+            "x": 223.83155645802617,
+            "y": 421.4992086496204,
+            "life": 29.95,
+            "durability": 90
+          },
+          {
+            "x": 275.70825764909387,
+            "y": 412.7804973721504,
+            "life": 29.95,
+            "durability": 90
+          },
+          {
+            "x": 259.8817606456578,
+            "y": 412.82759458757937,
+            "life": 29.95,
+            "durability": 90
+          },
+          {
+            "x": 218.34122026339173,
+            "y": 420.3402249701321,
+            "life": 29.95,
+            "durability": 90
+          }
+        ],
+        "deaths": [
+          {
+            "kind": "marble",
+            "x": 250,
+            "y": 417.5,
+            "elapsed": 0.1
+          }
+        ],
+        "drops": []
+      },
+      {
+        "crumbs": 9924,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 428.7599999999992,
+            "health": 2926.0000000000164,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [
+          {
+            "x": 281.08529599383473,
+            "y": 446.99973474256694,
+            "life": 27.94999999999997,
+            "durability": 90
+          },
+          {
+            "x": 239.62214866653085,
+            "y": 418.6841219291091,
+            "life": 27.94999999999997,
+            "durability": 66.8999999999999
+          },
+          {
+            "x": 266.42313407734036,
+            "y": 437.58470174856484,
+            "life": 27.94999999999997,
+            "durability": 61.29999999999988
+          },
+          {
+            "x": 221.8550925888121,
+            "y": 450.5480189435184,
+            "life": 27.94999999999997,
+            "durability": 90
+          },
+          {
+            "x": 223.83155645802617,
+            "y": 421.4992086496204,
+            "life": 27.94999999999997,
+            "durability": 90
+          },
+          {
+            "x": 275.70825764909387,
+            "y": 412.7804973721504,
+            "life": 27.94999999999997,
+            "durability": 90
+          },
+          {
+            "x": 259.8817606456578,
+            "y": 412.82759458757937,
+            "life": 27.94999999999997,
+            "durability": 78.79999999999995
+          },
+          {
+            "x": 218.34122026339173,
+            "y": 420.3402249701321,
+            "life": 27.94999999999997,
+            "durability": 90
+          }
+        ],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9924,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 407.1599999999984,
+            "health": 2816.100000000045,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [
+          {
+            "x": 281.08529599383473,
+            "y": 446.99973474256694,
+            "life": 24.94999999999993,
+            "durability": 90
+          },
+          {
+            "x": 239.62214866653085,
+            "y": 418.6841219291091,
+            "life": 24.94999999999993,
+            "durability": 24.899999999999775
+          },
+          {
+            "x": 266.42313407734036,
+            "y": 437.58470174856484,
+            "life": 24.94999999999993,
+            "durability": 35.39999999999978
+          },
+          {
+            "x": 221.8550925888121,
+            "y": 450.5480189435184,
+            "life": 24.94999999999993,
+            "durability": 90
+          },
+          {
+            "x": 223.83155645802617,
+            "y": 421.4992086496204,
+            "life": 24.94999999999993,
+            "durability": 90
+          },
+          {
+            "x": 275.70825764909387,
+            "y": 412.7804973721504,
+            "life": 24.94999999999993,
+            "durability": 90
+          },
+          {
+            "x": 259.8817606456578,
+            "y": 412.82759458757937,
+            "life": 24.94999999999993,
+            "durability": 36.799999999999784
+          },
+          {
+            "x": 218.34122026339173,
+            "y": 420.3402249701321,
+            "life": 24.94999999999993,
+            "durability": 90
+          }
+        ],
+        "deaths": [],
+        "drops": []
+      },
+      {
+        "crumbs": 9924,
+        "screen": "play",
+        "marbles": [],
+        "ants": [
+          {
+            "type": "basic",
+            "lane": 0,
+            "x": 250,
+            "y": 363.95999999999674,
+            "health": 2762.9000000000588,
+            "armor": 0,
+            "slow": 0,
+            "emerging": false,
+            "burrowing": false
+          }
+        ],
+        "shots": [],
+        "shards": [
+          {
+            "x": 281.08529599383473,
+            "y": 446.99973474256694,
+            "life": 18.949999999999843,
+            "durability": 90
+          },
+          {
+            "x": 239.62214866653085,
+            "y": 418.6841219291091,
+            "life": 18.949999999999843,
+            "durability": 3.8999999999997907
+          },
+          {
+            "x": 266.42313407734036,
+            "y": 437.58470174856484,
+            "life": 18.949999999999843,
+            "durability": 35.39999999999978
+          },
+          {
+            "x": 221.8550925888121,
+            "y": 450.5480189435184,
+            "life": 18.949999999999843,
+            "durability": 90
+          },
+          {
+            "x": 223.83155645802617,
+            "y": 421.4992086496204,
+            "life": 18.949999999999843,
+            "durability": 90
+          },
+          {
+            "x": 275.70825764909387,
+            "y": 412.7804973721504,
+            "life": 18.949999999999843,
+            "durability": 90
+          },
+          {
+            "x": 259.8817606456578,
+            "y": 412.82759458757937,
+            "life": 18.949999999999843,
+            "durability": 4.599999999999791
+          },
+          {
+            "x": 218.34122026339173,
+            "y": 420.3402249701321,
+            "life": 18.949999999999843,
+            "durability": 90
+          }
+        ],
+        "deaths": [],
+        "drops": []
+      }
+    ]
+  }
+}
