@@ -91,15 +91,24 @@ Ants spawn below the exit in a random lane and climb. When a marble blocks them 
 | Spitter (blue, shiny) | 90 | 8 | 15 | Stops 210 px away from a marble and spits venom every 2 s: 12 dmg + poison (7 dmg/s for 4 s) |
 | Red | 600 | 3.5 | 90 | Huge, very slow, devastating bite |
 | Swarm (brown) | 30 | 14 | 8 | Tiny; arrives in packs of 5 |
-| Boss | 1500 | 4 | 60 | Final ant of the level |
+| Mite (tan) | 14 | 26 | 5 | Very small and fast; arrives in packs of 9 (free play from the ~9th ant) |
+| Digger (clay) | 110 | 10 | 20 | When blocked by a marble it burrows for 1.4 s (immune to shots, bombs, shards, and passes under marbles) and resurfaces 170 px further up; can dig twice (free play from the ~15th ant) |
+| Boss | 1500 | 4 | 60 | Used as the campaign finale |
+| Queen | 6000 | 3 | 70 per lane | Free-play finale: spans all 5 lanes, chews a marble in every lane at once, spawns 3 swarm babies every 5 s (max 45 ants on screen). Bombs deal 500, the Ant Eater 1200 (once per sweep), instead of killing her outright |
 
 Slowed ants move at half speed.
 
 ## 6. Wave schedule
 
-- First ant at 20 s. Each following ant arrives after `max(2.2, 9 − 0.12 × i)` seconds, for **60 ants**, then a boss 10 s after the last.
+- First ant at 20 s. Each following ant arrives after `max(2.2, 9 − 0.12 × i)` seconds, for **60 ants**, then the Queen 10 s after the last.
 - Type is rolled per ant, unlocking as the game progresses: fast (from #7), jumper (#10), swarm (#13), tank (#16), red (#19), armored (#21), spitter (#26).
 - Every 20th ant is accompanied by 4 extra basic ants.
+
+## 6a. Game modes
+
+The main menu offers **Campaign** and **Free Play** (the full-length game above, everything unlocked).
+
+Campaign is 10 short levels (~1 minute each). Each level starts with an intro screen listing what is new; marbles, ants, the glove (level 1) and the Ant Eater (level 3) are introduced gradually, and the bar only shows what has been unlocked so far. Level 1 has only the Shooter marble and basic ants; level 10 ends with the Queen. Campaign ants walk 25% faster, start with reduced health that scales up per level, and crumbs fall faster than in free play. Winning unlocks the next level (progress saved in localStorage); a **Main menu** button is available during play.
 
 ## 7. Controls
 
