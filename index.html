@@ -62,6 +62,8 @@ const ANTS={
   swarm:{hp:30,  speed:14,dmg:8, color:'#6d4c41',size:.55,group:5},   // arrives in packs
   mite: {hp:14,  speed:26,dmg:5, color:'#c0a060',size:.38,group:9},   // tiny, very fast, big packs
   digger:{hp:110,speed:10,dmg:20,color:'#8d6e63',size:1,digs:2,digDist:170}, // burrows under marbles and resurfaces further up
+  carrier:{hp:160,speed:7,dmg:18,color:'#ab47bc',size:1.2,split:4},  // bursts into mites when killed
+  medic:{hp:120,speed:8,dmg:12,color:'#e0e0e0',size:1,heal:14,healR:130}, // heals nearby ants
 };
 
 const QUEEN_EATER_DMG=1200,QUEEN_BOMB_DMG=500;
@@ -84,33 +86,101 @@ const ANT_INFO={
   red:['Fire Ant','Huge and slow, with a devastating bite.'],
   boss:['The Queen','Enormous. Bring everything you have!'],
   queen:['Giant Queen','Spans every lane, chews them all at once and keeps spawning swarm babies.'],
+  carrier:['Carrier','Bursts into a pack of mites when squashed.'],
+  medic:['Medic Ant','Slowly heals the ants around it - take it out first!'],
 };
+// level features (modifiers); [icon, name, description]
+const MOD_INFO={
+  rain:['🌧️','Rain','Crumbs fall from above twice as often.'],
+  drought:['🏜️','Drought','No crumbs fall from above - gold and rings only.'],
+  bounty:['💰','Bounty','Every ant squashed pays 5 crumbs.'],
+  wind:['💨','Gusts','Wind blows rolling marbles one lane sideways every so often.'],
+  quake:['🌋','Tremors','Quakes regularly chip every marble on the board.'],
+  rush:['📣','Rush waves','Big groups of ants charge at once.'],
+  frenzy:['⚡','Frenzy','Ants move 25% faster.'],
+  fortify:['🛡️','Fortified','You start with a wall of steel marbles.'],
+  narrow:['🚧','Narrow tunnel','Ants only come up the three middle lanes.'],
+  flank:['↔️','Pincer','Ants only come up the outer lanes.'],
+  miniboss:['👑','Guard Captain','A Queen\'s guard arrives halfway through.'],
+};
+const CHAPTERS=['Chapter 1: The Garden','Chapter 2: The Kitchen','Chapter 3: The Cellar','Chapter 4: The Anthill'];
 // add = marbles introduced, ants = ants introduced; both accumulate over the campaign
+// story = shown before the level, outro = shown after winning it. ch = chapter index.
 const LEVEL_DEFS=[
-  {name:'Garden Gate',   add:['red'],   ants:['basic'],  glove:true, tip:'Click a lane to drop a marble. Higher drops hit harder! Use the glove (G) to reposition marbles.'},
-  {name:'Crumb Collector',add:['gold'], ants:['fast'],   tip:'Gold marbles make crumbs. Click falling crumbs to collect them.'},
-  {name:'Iron Wall',     add:['steel'], ants:['tank'],   eater:true, tip:'Steel is tough and hits hard from height. The Ant Eater (E) sweeps the maze clean - an emergency button!'},
-  {name:'Cold Snap',     add:['blue'],  ants:['jumper'], tip:'Frost slows ants. Hoppers skip the first marble they meet.'},
-  {name:'Track Day',     add:['rampL','rampR','spring'], ants:['swarm'], tip:'Track pieces steer marbles. Click a placed spring to set its strength.'},
-  {name:'Boom Town',     add:['bomb'],  ants:['armored'],tip:'Bombs blow up on contact and ignore armor.'},
-  {name:'Shatter',       add:['glass','boost'], ants:['spitter'], tip:'Glass shards cut ants. Boost makes marbles hit harder.'},
-  {name:'Double Trouble',add:['twin','ring'],   ants:['red'], tip:'Rings pay crumbs each time a marble passes through.'},
-  {name:'Full Swing',    add:[],        ants:[],         tip:'Everything you have learned. Build a machine!'},
-  {name:"Queen's Court", add:[],        ants:['boss'],   boss:true, tip:'The Queen is coming. Hold the line!'},
+  {ch:0,name:'Garden Gate',   add:['red'],   ants:['basic'],  glove:true, tip:'Click a lane to drop a marble. Higher drops hit harder! Use the glove (G) to reposition marbles.',
+    story:'Grandpa Marbleton: "Pip! The ants are marching on our marble maze! Grab a Shooter and drop it in their path."',
+    outro:'Pip: "They ran off! ...but I saw a lot more ants waiting by the fence."'},
+  {ch:0,name:'Crumb Collector',add:['gold'], ants:['fast'],   tip:'Gold marbles make crumbs. Click falling crumbs to collect them.',
+    story:'Grandpa: "Marbles cost crumbs, Pip. Gold marbles shake crumbs loose - collect every one you see."',
+    outro:'Grandpa: "Good haul! Those sprinters were scouts. Something bigger is coming."'},
+  {ch:0,name:'Iron Wall',     add:['steel'], ants:['tank'],   eater:true, tip:'Steel is tough and hits hard from height. The Ant Eater (E) sweeps the maze clean - an emergency button!',
+    story:'Pip: "Grandpa, that one\'s the size of a beetle!" Grandpa: "A Tank Ant. Time for steel... and I\'ll wake up old Snuffles the Ant Eater."',
+    outro:'Snuffles burps contentedly. Grandpa: "Never fails."'},
+  {ch:0,name:'Cold Snap',     add:['blue'],  ants:['jumper'], tip:'Frost slows ants. Hoppers skip the first marble they meet.',
+    story:'An autumn chill settles on the garden. Pip: "These ones are hopping right over our marbles!"',
+    outro:'Grandpa: "Frozen in their tracks. The colony is getting desperate."'},
+  {ch:0,name:'Track Day',     add:['rampL','rampR','spring'], ants:['swarm'], tip:'Track pieces steer marbles. Click a placed spring to set its strength.',
+    story:'Grandpa digs out his old track set. "A real maze-builder uses ramps and springs, Pip. Here comes a swarm!"',
+    outro:'Pip: "They\'re retreating into the house... into the KITCHEN!" Grandpa: "Grab the maze. We follow."'},
+  {ch:1,name:'Boom Town',     add:['bomb'],  ants:['armored'],tip:'Bombs blow up on contact and ignore armor.',
+    story:'On the kitchen table, ants in bottle-cap armour stand guard. Grandpa: "Shots bounce off those. Time for something louder."',
+    outro:'Pip (ears ringing): "WHAT?" Grandpa: "I SAID GOOD JOB!"'},
+  {ch:1,name:'Shatter',       add:['glass','boost'], ants:['spitter'], tip:'Glass shards cut ants. Boost makes marbles hit harder.',
+    story:'Shiny blue ants spit venom from across the counter. Grandpa: "Grandma\'s glass marbles - shatter them in their path!"',
+    outro:'Pip: "Grandma\'s going to be mad about those marbles." Grandpa: "She\'ll be madder about ants in the sugar."'},
+  {ch:1,name:'Double Trouble',add:['twin','ring'],   ants:['red'], tip:'Rings pay crumbs each time a marble passes through.',
+    story:'Fire Ants pour out of the toaster. Pip finds a pair of twin marbles and some brass rings in the drawer.',
+    outro:'Grandpa: "The red ones are the Queen\'s own soldiers. She must be close."'},
+  {ch:1,name:'Full Swing',    add:[],        ants:[],         mods:['rush'], tip:'Everything you have learned. Build a machine!',
+    story:'The whole kitchen colony charges at once. Grandpa: "Build the biggest machine you can, Pip!"',
+    outro:'Pip: "There - behind the fridge! Something enormous!"'},
+  {ch:1,name:"Queen's Court", add:[],        ants:['boss'],   boss:true, tip:'The Queen is coming. Hold the line!',
+    story:'The Queen herself emerges from behind the fridge. Grandpa: "Hold the line, Pip!"',
+    outro:'The wounded Queen flees through a crack in the floor... down into the cellar. Grandpa: "She\'ll be back with more. We go after her."'},
+  {ch:2,name:'Down the Drain',add:[],        ants:['mite'],   mods:['rain'], tip:'Mites are tiny and come in huge packs. Rain brings extra crumbs.',
+    story:'The cellar is damp and dripping. Pip: "Grandpa, the floor is MOVING!" Grandpa: "Mites. Thousands of them."',
+    outro:'Grandpa: "Wet crumbs are still crumbs. Onward."'},
+  {ch:2,name:'Tunnel Vision', add:[],        ants:['digger'], mods:['narrow'], tip:'Diggers tunnel under marbles. Ants only come up the middle lanes.',
+    story:'The ants have dug a narrow tunnel through the cellar wall. Some of them dig under anything in their way.',
+    outro:'Pip: "They\'re digging deeper. Where are they going?"'},
+  {ch:2,name:'Dry Spell',     add:[],        ants:[],         mods:['drought','bounty'], tip:'No crumbs from above - but every squashed ant pays out.',
+    story:'Grandpa: "The pantry\'s bare down here. No crumbs falling - we\'ll have to earn them from the ants themselves."',
+    outro:'Grandpa counts the crumbs. "Just enough. Just."'},
+  {ch:2,name:'Rattling Pipes',add:[],        ants:['carrier'],mods:['quake'], tip:'Carriers burst into mites. The boiler shakes every marble.',
+    story:'The old boiler rumbles to life, shaking the maze. Fat purple ants waddle out, stuffed with something...',
+    outro:'Pip: "Gross. They were FULL of mites." Grandpa: "Wash your hands later. Look - the Queen\'s guard."'},
+  {ch:2,name:"Queen's Guard", add:[],        ants:[],         boss:true, mods:['fortify','miniboss'], tip:'Two royal guards. Your steel wall buys you time.',
+    story:'Grandpa wedges steel marbles into the maze. "Her guard captains are coming. Let the steel take the first bite."',
+    outro:'The guards fall. Behind them, a tunnel leads out under the garden... to the giant ANTHILL.'},
+  {ch:3,name:'Draughty Hall', add:[],        ants:['medic'],  mods:['wind'], tip:'Medics heal nearby ants. Gusts push rolling marbles sideways.',
+    story:'Wind howls through the tunnels of the anthill. White-striped Medic Ants patch up their friends.',
+    outro:'Pip: "Take out the medics first. Got it."'},
+  {ch:3,name:'Pincer Move',   add:[],        ants:[],         mods:['flank','rush'], tip:'Ants only come up the outer lanes - in big rushes.',
+    story:'Grandpa: "They\'re trying to surround us! Watch the edges, Pip!"',
+    outro:'Grandpa: "Ha! Ramps, Pip. Always ramps."'},
+  {ch:3,name:'Fever Pitch',   add:[],        ants:[],         mods:['frenzy','bounty'], tip:'The colony is in a frenzy - faster ants, but they pay crumbs.',
+    story:'The Queen\'s drums beat faster. Every ant in the hill is racing towards us.',
+    outro:'Pip: "I can hear her, Grandpa. She\'s right below us."'},
+  {ch:3,name:'Last Stand',    add:[],        ants:[],         mods:['drought','quake','rush'], tip:'No falling crumbs, shaking ground, and rush waves. Everything at once.',
+    story:'The anthill shakes as the colony throws everything it has left. Grandpa: "This is it. One more push!"',
+    outro:'The ground splits open. Out of the darkness rises the Giant Queen - bigger than the whole maze.'},
+  {ch:3,name:'Heart of the Hive',add:[],     ants:['queen'],  finale:true, mods:['fortify'], tip:'The Giant Queen spans every lane. Use bombs and the Ant Eater!',
+    story:'Grandpa: "Every marble, every track, everything we\'ve got, Pip. For the garden!"',
+    outro:'The Giant Queen crumbles. The colony scatters, and peace returns to the garden. Pip: "Same time next summer, Grandpa?" Grandpa: "Wouldn\'t miss it."'},
 ];
 const LEVELS=[];
 // difficulty curve: starting crumbs, ant health scale and spawn gap per level index
-const CAMP={crumbs:i=>400+i*40,hp:i=>[.55,.6,.7,.7,.75,.8,.95,1.1,1.25,1.3][i],gap:i=>Math.max(2.6,4.2-i*.18),end:i=>26+i*1.5,speed:1.25};
+const CAMP={crumbs:i=>400+i*40,hp:i=>[.55,.6,.7,.7,.75,.8,.95,1.1,1.25,1.3,1.3,1.35,1.4,1.45,1.5,1.5,1.55,1.6,1.65,1.7][i],gap:i=>Math.max(2.6,4.2-i*.18),end:i=>26+i*1.5,speed:1.25};
 {let m=[],a=[],g=false,e=false;
   LEVEL_DEFS.forEach((d,i)=>{
     m=m.concat(d.add);a=a.concat(d.ants);g=g||!!d.glove;e=e||!!d.eater;
-    LEVELS.push({...d,marbles:m,antTypes:a,glove:g,eater:e,newGlove:!!d.glove,newEater:!!d.eater,crumbs:CAMP.crumbs(i),hp:CAMP.hp(i)});
+    LEVELS.push({mods:[],...d,marbles:m,antTypes:a,glove:g,eater:e,newGlove:!!d.glove,newEater:!!d.eater,crumbs:CAMP.crumbs(i),hp:CAMP.hp(i)});
   });}
 function reset(){
   const mouse=S?S.mouse:{x:0,y:0};
   S={crumbs:150,plants:[],pieces:[],shards:[],held:null,glove:false,gloveCd:0,eater:null,eaterCd:20,ants:[],shots:[],drops:[],fx:[],t:0,sel:null,
      cd:{},dropT:4,dropMin:7,dropVar:3,state:'menu',paused:false,mouse,queue:[],msg:null,
-     order:ORDER.slice(),cfg:{glove:true,eater:true}};
+     order:ORDER.slice(),cfg:{glove:true,eater:true},mods:{},lanes:null,windT:12,quakeT:18};
   ORDER.forEach(k=>S.cd[k]=0);
   buildLevel();
 }
@@ -119,13 +189,20 @@ function startGame(m,i){
   if(m==='campaign'){
     const L=LEVELS[i];
     S.order=L.marbles;S.cfg={glove:L.glove,eater:L.eater};S.crumbs=L.crumbs;S.dropMin=3.5;S.dropVar=1.5;S.antHp=L.hp;S.antSpd=CAMP.speed;
+    for(const k of L.mods)S.mods[k]=true;
+    if(S.mods.rain){S.dropMin/=2;S.dropVar/=2;}
+    if(S.mods.frenzy)S.antSpd*=1.25;
+    if(S.mods.narrow)S.lanes=[1,2,3];
+    if(S.mods.flank)S.lanes=[0,1,3,4];
+    if(S.mods.fortify)for(const l of [0,1,2,3,4])addMarble('steel',l,BOTTOM-150-(l%2)*60);
     buildCampaign(L,i);S.state='intro';
   }else S.state='play';
 }
 // campaign levels are short (~1 minute); each newly introduced ant is guaranteed to show up
 function buildCampaign(L,i){
   const q=[],end=CAMP.end(i),gap=CAMP.gap(i);
-  const pool=L.antTypes.filter(x=>x!=='boss'),fresh=L.ants.filter(x=>x!=='boss');
+  const big=x=>x!=='boss'&&x!=='queen';
+  const pool=L.antTypes.filter(big),fresh=L.ants.filter(big);
   const total=Math.floor((end-5)/gap),seen=new Set();
   let t=5,k=0;
   while(t<end){
@@ -137,7 +214,14 @@ function buildCampaign(L,i){
     seen.add(type);q.push([t,type]);k++;
     t+=gap*(.8+Math.random()*.4);
   }
+  if(L.mods.rush)for(const f of [.4,.7,.9]){
+    const rt=5+(end-5)*f,nb=pool.filter(a=>!ANTS[a].group);
+    for(let r=0;r<5;r++)q.push([rt+r*.3,nb[Math.floor(Math.random()*nb.length)]]);
+  }
+  if(L.mods.miniboss)q.push([5+(end-5)*.5,'boss']);
+  q.sort((x,y)=>x[0]-y[0]);
   if(L.boss){t+=4;q.push([t,'boss']);}
+  if(L.finale){t+=4;q.push([t,'queen']);}
   S.queue=q;S.endT=t;
 }
 function buildLevel(){
@@ -163,6 +247,11 @@ function buildLevel(){
 const laneX=l=>GX+l*LW+LW/2;
 
 let debug=false; // toggled with F2: infinite crumbs, no cooldowns
+function addMarble(type,l,y){
+  const T=TYPES[type];
+  S.plants.push({type,l,y,hp:T.hp,max:T.hp,t:0,fuse:.8,engaged:false,poison:0,vy:ROLL,fallen:0,falling:true,
+    lastPc:S.pieces.find(q=>q.l===l&&Math.abs(q.y-y)<=16)||null,xo:0});
+}
 function place(type,l,y){
   const T=TYPES[type];
   if(!debug&&(S.crumbs<T.cost||S.cd[type]>0))return false;
@@ -175,8 +264,7 @@ function place(type,l,y){
     return true;
   }
   S.crumbs-=T.cost;S.cd[type]=T.cd;
-  S.plants.push({type,l,y,hp:T.hp,max:T.hp,t:0,fuse:.8,engaged:false,poison:0,vy:ROLL,fallen:0,falling:true,
-    lastPc:S.pieces.find(q=>q.l===l&&Math.abs(q.y-y)<=16)||null,xo:0});
+  addMarble(type,l,y);
   return true;
 }
 const EATER_CD=90,EATER_SPEED=230;
@@ -212,7 +300,7 @@ function spawnAnt(type,l,n){
       slow:0,flash:0,ph:Math.random()*6,jumped:false,jump:null,lift:0,spit:1+Math.random(),digs:d.digs||0,emerge:.8});
 }
 const ANT_KEYS=Object.keys(ANTS);
-const antBtn=i=>({x:4+i*74,y:BOTTOM+14,w:70,h:30});
+const antBtn=i=>({x:4+i*64,y:BOTTOM+14,w:60,h:30});
 function update(dt){
   if(S.msg){S.msg.life-=dt;if(S.msg.life<=0)S.msg=null;}
   if(S.state!=='play'||S.paused)return;
@@ -237,12 +325,22 @@ function update(dt){
     if(S.eater.y<GY-110)S.eater=null;
   }else S.eaterCd=Math.max(0,S.eaterCd-dt);
   for(const k in S.cd)S.cd[k]=Math.max(0,S.cd[k]-dt);
+  if(S.mods.wind&&(S.windT-=dt)<=0){
+    S.windT=10+Math.random()*5;const dir=Math.random()<.5?-1:1;
+    for(const p of S.plants){const nl=p.l+dir;if(p.stuck||nl<0||nl>=LANES)continue;p.xo=laneX(p.l)-laneX(nl);p.l=nl;}
+    note(dir<0?'💨 Gust blows left!':'💨 Gust blows right!');
+  }
+  if(S.mods.quake&&(S.quakeT-=dt)<=0){
+    S.quakeT=16+Math.random()*4;
+    for(const p of S.plants)if(p.type!=='bomb')p.hp-=p.max*.15;
+    note('🌋 Tremor!');
+  }
   S.dropT-=dt;
-  if(S.dropT<=0){S.dropT=S.dropMin+Math.random()*S.dropVar;
+  if(S.dropT<=0&&!S.mods.drought){S.dropT=S.dropMin+Math.random()*S.dropVar;
     S.drops.push({x:GX+30+Math.random()*(LANES*LW-60),y:-10,ty:GY+60+Math.random()*LEN*.8,v:40,val:25,life:10});}
   while(S.queue.length&&S.queue[0][0]<=S.t){
     const [,type]=S.queue.shift();
-    const l=Math.floor(Math.random()*LANES);
+    const ls=S.lanes||[0,1,2,3,4],l=ls[Math.floor(Math.random()*ls.length)];
     spawnAnt(type,l);
   }
   // marbles: roll down the lane until blocked. Processed lowest first so a marble can
@@ -351,6 +449,7 @@ function update(dt){
       if(a.y<GY-5)S.state='lose';
       continue;
     }
+    if(d.heal)for(const b of S.ants)if(b!==a&&!b.wide&&b.hp<b.max&&Math.hypot(b.x-a.x,b.y-a.y)<d.healR)b.hp=Math.min(b.max,b.hp+d.heal*dt);
     for(const p of S.plants)if(p.l===a.l&&p.y<a.y&&a.y-p.y<MA&&(!front||p.y>front.y))front=p;
     if(front){
       if(a.type==='jumper'&&!a.jumped){a.jumped=true;a.jump={t:0,from:a.y,to:a.y-MM*1.6};continue;}
@@ -368,7 +467,13 @@ function update(dt){
     }
     if(a.y<GY-5)S.state='lose';
   }
-  for(const a of S.ants)if(a.hp<=0)S.fx.push({x:a.x,y:a.y,t:0,max:.4,kind:'puff'});
+  for(const a of S.ants.slice())if(a.hp<=0){
+    S.fx.push({x:a.x,y:a.y,t:0,max:.4,kind:'puff'});
+    if(S.mods.bounty){S.crumbs+=5;S.fx.push({x:a.x,y:a.y-24,t:0,max:.8,kind:'dmg',text:'+5'});}
+    const sp=ANTS[a.type].split;
+    if(sp){const md=ANTS.mite;for(let i=0;i<sp;i++)S.ants.push({type:'mite',l:a.l,x:a.x+(i%2?10:-10),y:a.y+8+i*10,hp:md.hp*(S.antHp||1),max:md.hp*(S.antHp||1),
+      armor:0,slow:0,flash:0,ph:Math.random()*6,jumped:false,jump:null,lift:0,spit:1,digs:0,emerge:.3});}
+  }
   S.ants=S.ants.filter(a=>a.hp>0);
   for(const d of S.drops){if(d.y<d.ty)d.y+=d.v*dt;else d.life-=dt;}
   S.drops=S.drops.filter(d=>d.life>0);
@@ -570,7 +675,8 @@ function draw(){
     ctx.fillStyle='#3d2812';ctx.fillRect(mb.x+2,mb.y+2,mb.w-4,mb.h-4);
     ctx.fillStyle='#fff';ctx.fillText('☰ Main menu',mb.x+mb.w/2,mb.y+19);
     if(mode==='campaign'){ctx.textAlign='left';ctx.font='bold 13px sans-serif';
-      ctx.fillText('Level '+(lvl+1),20,GY+138);ctx.font='12px sans-serif';ctx.fillText(LEVELS[lvl].name,20,GY+156);}
+      ctx.fillText('Level '+(lvl+1),20,GY+138);ctx.font='12px sans-serif';ctx.fillText(LEVELS[lvl].name,20,GY+156);
+      ctx.font='14px sans-serif';ctx.fillText(LEVELS[lvl].mods.map(k=>MOD_INFO[k][0]).join(' '),20,GY+175);}
   }
   if(S.state!=='play')overlay();
   else if(S.paused){
@@ -625,8 +731,8 @@ function getButtons(){
   const camp=mode==='campaign',y0=cv.height/2+50;
   switch(S.state){
     case 'menu':return [B('Campaign',330,()=>{S.state='levels';}),B('Free Play',392,()=>startGame('free',0))];
-    case 'levels':return [...LEVELS.map((L,i)=>({x:130+(i%5)*130,y:250+Math.floor(i/5)*120,w:110,h:100,label:String(i+1),sub:L.name,locked:i>=unlocked,
-      fn:()=>startGame('campaign',i)})),B('Back',520,reset)];
+    case 'levels':return [...LEVELS.map((L,i)=>({x:130+(i%5)*130,y:215+Math.floor(i/5)*100,w:110,h:76,label:String(i+1),sub:L.name,locked:i>=unlocked,
+      fn:()=>startGame('campaign',i)})),B('Back',620,reset)];
     case 'intro':return [B('Start',590,()=>{S.state='play';}),B('Back',646,()=>{reset();S.state='levels';})];
     case 'win':{const r=[];
       if(camp&&lvl<LEVELS.length-1)r.push(B('Next Level',y0,()=>startGame('campaign',lvl+1)));
@@ -640,8 +746,14 @@ function getButtons(){
   return [];
 }
 const inRect=(m,b)=>m.x>=b.x&&m.x<=b.x+b.w&&m.y>=b.y&&m.y<=b.y+b.h;
+function wrapText(t,maxW){
+  const out=[];let line='';
+  for(const w of t.split(' ')){const tt=line?line+' '+w:w;if(ctx.measureText(tt).width>maxW&&line){out.push(line);line=w;}else line=tt;}
+  if(line)out.push(line);return out;
+}
 function introRows(L){
   const r=[];
+  for(const k of L.mods)r.push({icon:MOD_INFO[k][0],title:MOD_INFO[k][1],desc:MOD_INFO[k][2]});
   for(const k of L.add)r.push({k,title:`${TYPES[k].name} (${TYPES[k].cost})`,desc:TYPES[k].desc});
   if(L.newGlove)r.push({icon:'🧤',title:'Glove (G)',desc:'Pick up and move marbles and track pieces.'});
   if(L.newEater)r.push({eater:true,title:'Ant Eater (E)',desc:'Sweeps the whole maze clean, then rests 90 s.'});
@@ -656,16 +768,24 @@ function overlay(){
     ctx.font='bold 56px sans-serif';ctx.fillText('🐜 Ants vs Marbles',cx,200);
     ctx.font='20px sans-serif';ctx.fillText('Drop marbles in from the top and stop the ants!',cx,250);
   }else if(st==='levels'){
-    ctx.font='bold 44px sans-serif';ctx.fillText('Campaign',cx,150);
-    ctx.font='18px sans-serif';ctx.fillText('Select a level',cx,190);
+    ctx.font='bold 40px sans-serif';ctx.fillText('Campaign',cx,120);
+    ctx.font='16px sans-serif';ctx.fillText('Help Grandpa Marbleton and Pip drive the ant colony out of the garden',cx,155);
+    CHAPTERS.forEach((c,i)=>{ctx.textAlign='left';ctx.fillStyle=i*5<unlocked?'#ffd54f':'#666';ctx.font='bold 13px sans-serif';ctx.fillText(c,130,209+i*100);});
+    ctx.textAlign='center';ctx.fillStyle='#fff';
   }else if(st==='intro'){
     const L=LEVELS[lvl],rows=introRows(L);
-    ctx.font='bold 40px sans-serif';ctx.fillText(`Level ${lvl+1}: ${L.name}`,cx,120);
-    ctx.font='18px sans-serif';ctx.fillStyle='#ffd54f';ctx.fillText(L.tip,cx,160);
+    ctx.font='bold 16px sans-serif';ctx.fillStyle='#ffd54f';ctx.fillText(CHAPTERS[L.ch],cx,50);
+    ctx.fillStyle='#fff';ctx.font='bold 36px sans-serif';ctx.fillText(`Level ${lvl+1}: ${L.name}`,cx,92);
+    ctx.font='italic 17px sans-serif';ctx.fillStyle='#e8dcc8';
+    const sl=wrapText(L.story,760);sl.forEach((t,i)=>ctx.fillText(t,cx,128+i*22));
+    let y0=128+sl.length*22+14;
+    ctx.font='16px sans-serif';ctx.fillStyle='#ffd54f';
+    const tl=wrapText(L.tip,780);tl.forEach((t,i)=>ctx.fillText(t,cx,y0+i*20));y0+=tl.length*20+20;
     ctx.fillStyle='#fff';
-    if(rows.length){ctx.font='bold 16px sans-serif';ctx.fillText('NEW THIS LEVEL',cx,215);}
+    if(rows.length){ctx.font='bold 16px sans-serif';ctx.fillText('NEW THIS LEVEL',cx,y0);}
+    const sp=Math.min(56,(570-y0-30)/Math.max(1,rows.length));
     rows.forEach((r,i)=>{
-      const y=270+i*60;
+      const y=y0+40+i*sp;
       if(r.k)drawPiecePreview(r.k,290,y);
       else if(r.ant)drawAnt({type:r.ant,x:290,y,hp:1,max:1,armor:ANTS[r.ant].armor||0,slow:0,flash:0,ph:0});
       else if(r.eater)drawEater(290,y,.4,1);
@@ -677,7 +797,12 @@ function overlay(){
   }else{
     const camp=mode==='campaign',last=camp&&lvl===LEVELS.length-1;
     const m=st==='lose'?['The ants broke through!']:last?['Campaign complete!']:camp?['Level '+(lvl+1)+' complete!']:['You defended the maze!'];
-    ctx.font='bold 48px sans-serif';ctx.fillText(m[0],cx,cv.height/2-20);
+    ctx.font='bold 48px sans-serif';ctx.fillText(m[0],cx,camp?cv.height/2-90:cv.height/2-20);
+    if(camp){
+      ctx.font='italic 17px sans-serif';ctx.fillStyle='#e8dcc8';
+      const txt=st==='lose'?'Grandpa: "Don\'t give up, Pip. Rebuild the maze and try again!"':LEVELS[lvl].outro;
+      wrapText(txt,720).forEach((t,i)=>ctx.fillText(t,cx,cv.height/2-45+i*22));ctx.fillStyle='#fff';
+    }
   }
   for(const b of getButtons()){
     const hot=!b.locked&&inRect(S.mouse,b);

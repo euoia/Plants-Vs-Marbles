@@ -109,7 +109,11 @@ Slowed ants move at half speed.
 
 The main menu offers **Campaign** and **Free Play** (the full-length game above, everything unlocked).
 
-Campaign is 10 short levels (~1 minute each). Each level starts with an intro screen listing what is new; marbles, ants, the glove (level 1) and the Ant Eater (level 3) are introduced gradually, and the bar only shows what has been unlocked so far. Level 1 has only the Shooter marble and basic ants; level 10 ends with the Queen. Campaign ants walk 25% faster, start with reduced health that scales up per level, and crumbs fall faster than in free play. Winning unlocks the next level (progress saved in localStorage); a **Main menu** button is available during play.
+Campaign is 20 short levels (~1 minute each) in four story chapters: The Garden (1-5), The Kitchen (6-10), The Cellar (11-15) and The Anthill (16-20). Grandpa Marbleton and his grandchild Pip chase the ant colony from the garden to its anthill; each level's intro screen shows a story line, a tip and what is new, and the win screen shows the level's story outro. Marbles, ants, the glove (level 1) and the Ant Eater (level 3) are introduced gradually, and the bar only shows what has been unlocked so far. Level 10 ends with the Queen, level 15 has a mid-level and final Queen's guard, and level 20 ends with the Giant Queen. Levels 11-20 introduce Mites, Diggers, Carriers (burst into 4 mites on death) and Medics (heal nearby ants 14 hp/s within 130 px).
+
+Levels can have **features** (shown on the intro screen and as icons in the HUD): Rain (crumbs fall twice as often), Drought (no falling crumbs), Bounty (+5 crumbs per ant killed), Gusts (every 10-15 s all unblocked marbles shift one lane left or right), Tremors (every 16-20 s all marbles lose 15% max hp), Rush waves (groups of 5 ants at 40/70/90% of the level), Frenzy (ants 25% faster), Fortified (start with a steel marble in each lane), Narrow tunnel (ants only in the 3 middle lanes), Pincer (ants only in the outer lanes) and Guard Captain (a Queen's guard halfway through).
+
+Campaign ants walk 25% faster, start with reduced health that scales up per level, and crumbs fall faster than in free play. Winning unlocks the next level (progress saved in localStorage); a **Main menu** button is available during play.
 
 ## 7. Controls
 
