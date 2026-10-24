@@ -79,7 +79,7 @@ Pieces can be chained to build routes and loops (e.g. ramp across, spring back u
 
 ## 5. Ants (attackers)
 
-Ants spawn below the exit in a random lane and climb. When a marble blocks them they chew it (damage per second = `dmg`). Speeds below are in px/s before the global 0.8 speed scale.
+Ants spawn from a visible ant hill below the exit in a random lane. They spend a short moment digging out of the ground before climbing. When a marble blocks them they chew it (damage per second = `dmg`). Speeds below are in px/s before the global 0.8 speed scale.
 
 | Ant | HP | Speed | DPS | Notes |
 |---|---|---|---|---|
@@ -97,6 +97,8 @@ Ants spawn below the exit in a random lane and climb. When a marble blocks them 
 | Queen | 6000 | 3 | 70 per lane | Free-play finale: spans all 5 lanes, chews a marble in every lane at once, spawns 3 swarm babies every 5 s (max 45 ants on screen). Bombs deal 500, the Ant Eater 1200 (once per sweep), instead of killing her outright |
 
 Slowed ants move at half speed.
+
+Defeated ants and marbles play a short fade/impact animation before being removed from the playfield.
 
 ## 6. Wave schedule
 

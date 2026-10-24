@@ -39,6 +39,7 @@ const RING_REWARD=2;
 const ORDER=['gold','red','blue','twin','steel','bomb','glass','spring','rampL','rampR','boost','ring'];
 const BOOST_V=720,BOOST_BONUS=250,BOOST_MULT=1.5,GLOVE_CD=8;
 const SHARD_R=22,SHARD_DPS=14,SHARD_LIFE=30,SHARD_DUR=90,SHARD_COUNT=8;
+const DEATH_LIFE=.7,SPAWN_DUR=.95,SPAWN_RISE=42;
 function shatter(p){
   const x=laneX(p.l),y=p.y;
   for(let i=0;i<SHARD_COUNT;i++)
@@ -106,7 +107,7 @@ const CAMP={crumbs:i=>400+i*40,hp:i=>[.55,.6,.7,.7,.75,.8,.95,1.1,1.25,1.3][i],g
   });}
 function reset(){
   const mouse=S?S.mouse:{x:0,y:0};
-  S={crumbs:150,plants:[],pieces:[],shards:[],held:null,glove:false,gloveCd:0,eater:null,eaterCd:20,ants:[],shots:[],drops:[],fx:[],t:0,sel:null,
+  S={crumbs:150,plants:[],pieces:[],shards:[],deaths:[],held:null,glove:false,gloveCd:0,eater:null,eaterCd:20,ants:[],shots:[],drops:[],fx:[],t:0,sel:null,
      cd:{},dropT:4,dropMin:7,dropVar:3,state:'menu',paused:false,mouse,queue:[],msg:null,
      order:ORDER.slice(),cfg:{glove:true,eater:true}};
   ORDER.forEach(k=>S.cd[k]=0);
@@ -197,17 +198,22 @@ function hurt(a,d,shot){
   if(shot&&a.armor>0){a.armor-=d*.6;return;}
   a.hp-=d;
 }
+function rememberDeath(kind,entity,x,y){
+  if(entity.deathQueued)return;
+  entity.deathQueued=true;
+  S.deaths.push({kind,entity:{...entity,jump:null,spawn:null},x,y,t:0,max:DEATH_LIFE});
+}
 
 function spawnAnt(type,l,n){
   const d=ANTS[type];
   n=n||d.group||1;
   if(d.wide){
-    S.ants.push({type,l:2,wide:true,x:GX+LANES*LW/2,y:BOTTOM+30,hp:d.hp,max:d.hp,armor:0,slow:0,flash:0,ph:0,jumped:false,jump:null,lift:0,spit:1,brood:d.brood});
+    S.ants.push({type,l:2,wide:true,x:GX+LANES*LW/2,y:BOTTOM+30,hp:d.hp,max:d.hp,armor:0,slow:0,flash:0,ph:0,jumped:false,jump:null,lift:0,spit:1,brood:d.brood,spawn:{t:0,dur:SPAWN_DUR}});
     return;
   }
   for(let i=0;i<n;i++)
     S.ants.push({type,l,x:laneX(l)+(n>5?((i%3)-1)*16:n>1?(i%2?10:-10):0),y:BOTTOM+30+i*(n>5?12:24),hp:d.hp*(S.antHp||1),max:d.hp*(S.antHp||1),armor:d.armor||0,
-      slow:0,flash:0,ph:Math.random()*6,jumped:false,jump:null,lift:0,spit:1+Math.random(),digs:d.digs||0});
+      slow:0,flash:0,ph:Math.random()*6,jumped:false,jump:null,lift:0,spit:1+Math.random(),digs:d.digs||0,spawn:{t:0,dur:SPAWN_DUR}});
 }
 const ANT_KEYS=Object.keys(ANTS);
 const antBtn=i=>({x:4+i*74,y:BOTTOM+14,w:70,h:30});
@@ -302,6 +308,7 @@ function update(dt){
     if(p.type==='bomb'&&p.engaged){p.fuse-=dt;if(p.fuse<=0)explode(p);}
   }
   for(const p of S.plants)if(p.type==='bomb'&&p.hp<=0&&!p.boom)explode(p); // a bomb killed by ants still goes off
+  for(const p of S.plants)if(p.hp<=0)rememberDeath('marble',p,laneX(p.l),p.y);
   S.plants=S.plants.filter(p=>p.hp>0);
   // shots fly down the lane
   for(const s of S.shots){
@@ -317,6 +324,11 @@ function update(dt){
   for(const a of S.ants){
     const d=ANTS[a.type];
     a.slow=Math.max(0,a.slow-dt);a.flash=Math.max(0,a.flash-dt);a.ph+=dt*8;
+    if(a.spawn){
+      a.spawn.t+=dt;
+      if(a.spawn.t<SPAWN_DUR)continue;
+      a.spawn=null;
+    }
     const sp=d.speed*SPD*(S.antSpd||1)*(a.slow>0?.5:1);
     if(a.jump){
       a.jump.t+=dt/(a.jump.dur||.6);
@@ -340,7 +352,7 @@ function update(dt){
         for(let i=0;i<d.babies;i++){
           const l=Math.floor(Math.random()*LANES),bd=ANTS.swarm;
           S.ants.push({type:'swarm',l,x:laneX(l)+(Math.random()-.5)*30,y:Math.min(BOTTOM+40,a.y+d.len*.7)+Math.random()*30,hp:bd.hp*(S.antHp||1),max:bd.hp*(S.antHp||1),
-            armor:0,slow:0,flash:0,ph:Math.random()*6,jumped:false,jump:null,lift:0,spit:1});
+            armor:0,slow:0,flash:0,ph:Math.random()*6,jumped:false,jump:null,lift:0,spit:1,spawn:{t:SPAWN_DUR,dur:SPAWN_DUR}});
         }
         S.fx.push({x:a.x,y:a.y+d.len*.6,t:0,max:.4,kind:'puff'});
       }
@@ -365,10 +377,15 @@ function update(dt){
     }
     if(a.y<GY-5)S.state='lose';
   }
-  for(const a of S.ants)if(a.hp<=0)S.fx.push({x:a.x,y:a.y,t:0,max:.4,kind:'puff'});
+  for(const a of S.ants)if(a.hp<=0){
+    rememberDeath('ant',a,a.x,a.y);
+    S.fx.push({x:a.x,y:a.y,t:0,max:.4,kind:'puff'});
+  }
   S.ants=S.ants.filter(a=>a.hp>0);
   for(const d of S.drops){if(d.y<d.ty)d.y+=d.v*dt;else d.life-=dt;}
   S.drops=S.drops.filter(d=>d.life>0);
+  for(const d of S.deaths)d.t+=dt;
+  S.deaths=S.deaths.filter(d=>d.t<d.max);
   for(const f of S.fx)f.t+=dt;S.fx=S.fx.filter(f=>f.t<f.max);
   if(!S.queue.length&&!S.ants.length){S.state='win';if(mode==='campaign')unlock(lvl+2);}
 }
@@ -474,16 +491,46 @@ function drawQueen(a){
   ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.strokeRect(x-bw/2,by,bw,10);
 }
 function drawAnt(a){
-  if(a.wide)return drawQueen(a);
-  if(a.jump&&a.jump.dig){ // underground: dirt mound and a trail of dust
-    const k=a.jump.t,x=a.x;
-    ctx.fillStyle='#5d4037';ctx.beginPath();ctx.ellipse(x,a.y+6,20,9,0,0,7);ctx.fill();
-    ctx.fillStyle='#795548';ctx.beginPath();ctx.ellipse(x,a.y+2,13,8,0,0,7);ctx.fill();
-    if(k<.15||k>.85){ctx.globalAlpha=.7;drawAntBody(a);ctx.globalAlpha=1;}
-    for(let i=1;i<4;i++){ctx.fillStyle='rgba(93,64,55,'+(.5-i*.12)+')';ctx.beginPath();ctx.arc(x+(i%2?5:-5),a.y+i*14,5-i,0,7);ctx.fill();}
+  const render=a.spawn?{...a,y:a.y-SPAWN_RISE*Math.min(1,a.spawn.t/a.spawn.dur)}:a;
+  if(render.wide)return drawQueen(render);
+  if(render.jump&&render.jump.dig){ // underground: dirt mound and a trail of dust
+    const k=render.jump.t,x=render.x;
+    ctx.fillStyle='#5d4037';ctx.beginPath();ctx.ellipse(x,render.y+6,20,9,0,0,7);ctx.fill();
+    ctx.fillStyle='#795548';ctx.beginPath();ctx.ellipse(x,render.y+2,13,8,0,0,7);ctx.fill();
+    if(k<.15||k>.85){ctx.globalAlpha=.7;drawAntBody(render);ctx.globalAlpha=1;}
+    for(let i=1;i<4;i++){ctx.fillStyle='rgba(93,64,55,'+(.5-i*.12)+')';ctx.beginPath();ctx.arc(x+(i%2?5:-5),render.y+i*14,5-i,0,7);ctx.fill();}
     return;
   }
-  drawAntBody(a);
+  drawAntBody(render);
+}
+function drawAntHill(x,y,active){
+  const wobble=active?Math.sin(S.t*18)*2:0;
+  ctx.save();
+  ctx.fillStyle='rgba(22,38,27,.28)';ctx.beginPath();ctx.ellipse(x,y+10,34,8,0,0,7);ctx.fill();
+  ctx.fillStyle='#6b4934';ctx.beginPath();ctx.ellipse(x,y,29,14+wobble,0,Math.PI,Math.PI*2);ctx.lineTo(x+29,y+5);ctx.quadraticCurveTo(x,y+19,x-29,y+5);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#8b6243';ctx.beginPath();ctx.ellipse(x,y-3,20,8,0,Math.PI,Math.PI*2);ctx.lineTo(x+20,y);ctx.quadraticCurveTo(x,y+10,x-20,y);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#3f2b24';ctx.beginPath();ctx.ellipse(x,y-1,7,3.5,0,0,7);ctx.fill();
+  if(active){
+    ctx.fillStyle='#b88a5b';
+    for(let i=0;i<4;i++){const a=S.t*4+i*1.7;ctx.beginPath();ctx.arc(x+Math.cos(a)*22,y-8+Math.sin(a)*5,2.5,0,7);ctx.fill();}
+  }
+  ctx.restore();
+}
+function drawDeath(d){
+  const k=d.t/d.max,fade=1-k,burst=Math.min(1,k*3);
+  ctx.save();ctx.globalAlpha=fade;
+  if(d.kind==='marble'){
+    ctx.translate(d.x,d.y);ctx.rotate(k*5);ctx.scale(1+Math.sin(k*Math.PI)*.35,1+Math.sin(k*Math.PI)*.35);
+    drawPlant(d.entity,0,0,1);
+    ctx.globalAlpha=fade*.8;ctx.strokeStyle='#ffe082';ctx.lineWidth=2;
+    for(let i=0;i<6;i++){const a=i*Math.PI/3+k*2,r=20+burst*18;ctx.beginPath();ctx.moveTo(Math.cos(a)*12,Math.sin(a)*12);ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);ctx.stroke();}
+  }else{
+    ctx.translate(d.x,d.y);ctx.rotate(Math.sin(k*Math.PI)*.35);ctx.scale(1+.12*Math.sin(k*Math.PI),1-.45*Math.sin(k*Math.PI));
+    drawAnt({...d.entity,x:0,y:0,spawn:null},0,0,1);
+    ctx.globalAlpha=fade*.75;ctx.fillStyle='#b88a5b';
+    for(let i=0;i<5;i++){const a=i*1.25+k*4,r=18+burst*22;ctx.beginPath();ctx.arc(Math.cos(a)*r,Math.sin(a)*r,2.5,0,7);ctx.fill();}
+  }
+  ctx.restore();
 }
 function drawAntBody(a){
   const d=ANTS[a.type],s=d.size,x=a.x,y=a.y-(a.lift||0);
@@ -532,6 +579,11 @@ function draw(){
   ctx.fillText('▼ MARBLES DROP IN HERE ▼',GX+LANES*LW/2,GY+14);
   ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillRect(GX,BOTTOM,LANES*LW,40);
   ctx.fillStyle='#ffd54f';ctx.fillText('EXIT  ▲ ants enter here ▲',GX+LANES*LW/2,BOTTOM+25);
+  for(let l=0;l<LANES;l++){
+    const active=S.ants.some(a=>a.l===l&&a.spawn);
+    drawAntHill(laneX(l),BOTTOM+10,active);
+  }
+  ctx.fillStyle='#ffd54f';ctx.fillText('EXIT  ▲ ants enter here ▲',GX+LANES*LW/2,BOTTOM+25);
   if(debug&&S.state==='play'){
     ctx.fillStyle='#222';ctx.fillRect(0,BOTTOM+8,cv.width,cv.height-BOTTOM-8);
     ANT_KEYS.forEach((k,i)=>{const b=antBtn(i);
@@ -561,6 +613,7 @@ function draw(){
   }
   for(const pc of S.pieces)drawPiece(pc.kind,laneX(pc.l),pc.y,1,pc);
   for(const p of S.plants)drawPlant(p,laneX(p.l)+(p.xo||0),p.y);
+  for(const d of S.deaths)drawDeath(d);
   // draw ants lowest first so upper ones overlap naturally
   for(const a of S.ants)drawAnt(a);
   if(S.eater)for(let l=0;l<LANES;l++)drawEater(laneX(l),S.eater.y,1,1);
