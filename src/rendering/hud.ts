@@ -1,4 +1,10 @@
-import { ANTEATER_COOLDOWN, GLOVE_COOLDOWN, TOOLBAR_HEIGHT } from '../game/constants';
+import {
+  ANTEATER_COOLDOWN,
+  CANVAS_HEIGHT,
+  CANVAS_WIDTH,
+  GLOVE_COOLDOWN,
+  TOOLBAR_HEIGHT,
+} from '../game/constants';
 import {
   ANT_DEFINITIONS,
   CAMPAIGN_LEVELS,
@@ -14,14 +20,14 @@ import { roundedRect } from './primitives';
 import { drawItemPreview, drawTrackPiece } from './track';
 
 export function drawToolbar(view: RenderContext) {
-  const { ctx, canvas, game } = view;
+  const { ctx, game } = view;
   const bar = ctx.createLinearGradient(0, 0, 0, TOOLBAR_HEIGHT);
   bar.addColorStop(0, '#263c32');
   bar.addColorStop(1, '#192e28');
   ctx.fillStyle = bar;
-  ctx.fillRect(0, 0, canvas.width, TOOLBAR_HEIGHT);
+  ctx.fillRect(0, 0, CANVAS_WIDTH, TOOLBAR_HEIGHT);
   ctx.fillStyle = 'rgba(240,218,158,.18)';
-  ctx.fillRect(0, TOOLBAR_HEIGHT - 2, canvas.width, 2);
+  ctx.fillRect(0, TOOLBAR_HEIGHT - 2, CANVAS_WIDTH, 2);
   ctx.fillStyle = '#e8d09a';
   ctx.font = 'bold 10px "Trebuchet MS",sans-serif';
   ctx.textAlign = 'left';
@@ -52,7 +58,7 @@ export function drawToolbar(view: RenderContext) {
   game.state.availableItems.forEach((type, index) => {
     const slot = toolbarSlot(index);
     const definition = ITEM_DEFINITIONS[type];
-    const affordable = game.state.crumbs >= definition.cost;
+    const affordable = game.debug || game.state.crumbs >= definition.cost;
     const cooldown = game.state.cooldowns[type];
     const card = ctx.createLinearGradient(slot.x, slot.y, slot.x, slot.y + slot.height);
     card.addColorStop(0, game.state.selectedItem === type ? '#526b4b' : '#344d3d');
@@ -64,17 +70,25 @@ export function drawToolbar(view: RenderContext) {
     ctx.lineWidth = game.state.selectedItem === type ? 2 : 1;
     roundedRect(view, slot.x + 0.5, slot.y + 0.5, slot.width - 1, slot.height - 1, 8);
     ctx.stroke();
+    // track pieces are drawn at board size (up to 70 wide), so shrink them to fit the 44-wide slot
+    ctx.save();
+    roundedRect(view, slot.x + 1, slot.y + 1, slot.width - 2, slot.height - 2, 7);
+    ctx.clip();
+    ctx.translate(slot.x + slot.width / 2, slot.y + 34);
     if (isTrackType(type)) {
-      drawTrackPiece(view, type, slot.x + slot.width / 2, slot.y + 34, affordable ? 1 : 0.4);
+      ctx.scale(0.55, 0.55);
+      drawTrackPiece(view, type, 0, 0, affordable ? 1 : 0.4);
     } else {
+      ctx.scale(0.85, 0.85);
       drawMarble(
         view,
         { type: type, elapsed: 0, health: 1, maxHealth: 1, touchingAnt: false },
-        slot.x + slot.width / 2,
-        slot.y + 34,
+        0,
+        0,
         affordable ? 1 : 0.4,
       );
     }
+    ctx.restore();
     ctx.fillStyle = '#f6f0db';
     ctx.font = 'bold 10px "Trebuchet MS",sans-serif';
     ctx.textAlign = 'center';
@@ -174,14 +188,14 @@ export function drawToolbar(view: RenderContext) {
 }
 
 export function drawMenuOverlay(view: RenderContext) {
-  const { ctx, canvas, game } = view;
+  const { ctx, game } = view;
   const screen = game.state.screen;
-  const centerX = canvas.width / 2;
+  const centerX = CANVAS_WIDTH / 2;
   ctx.fillStyle =
     screen === 'menu' || screen === 'levels' || screen === 'intro'
       ? 'rgba(16,35,28,.91)'
       : 'rgba(12,25,21,.78)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   const panel = ctx.createLinearGradient(200, 110, 700, 590);
   panel.addColorStop(0, 'rgba(63,86,60,.96)');
   panel.addColorStop(1, 'rgba(34,59,48,.97)');
@@ -288,7 +302,7 @@ export function drawMenuOverlay(view: RenderContext) {
             ? ['Level ' + (game.levelIndex + 1) + ' complete!']
             : ['You defended the maze!'];
     ctx.font = 'bold 42px "Trebuchet MS",sans-serif';
-    ctx.fillText(messages[0], centerX, canvas.height / 2 - 20);
+    ctx.fillText(messages[0], centerX, CANVAS_HEIGHT / 2 - 20);
   }
   ctx.shadowBlur = 0;
   for (const button of getMenuButtons(game)) {
@@ -337,11 +351,17 @@ function drawWrappedText(
   maxWidth: number,
   lineHeight: number,
 ) {
+  wrapText(text, maxWidth, (candidate) => ctx.measureText(candidate).width).forEach((line, index) =>
+    ctx.fillText(line, centerX, y + index * lineHeight),
+  );
+}
+
+export function wrapText(text: string, maxWidth: number, measure: (text: string) => number) {
   const lines: string[] = [];
   let line = '';
   for (const word of text.split(/\s+/)) {
     const candidate = line ? `${line} ${word}` : word;
-    if (line && ctx.measureText(candidate).width > maxWidth) {
+    if (line && measure(candidate) > maxWidth) {
       lines.push(line);
       line = word;
     } else {
@@ -351,5 +371,5 @@ function drawWrappedText(
   if (line) {
     lines.push(line);
   }
-  lines.forEach((line, index) => ctx.fillText(line, centerX, y + index * lineHeight));
+  return lines;
 }

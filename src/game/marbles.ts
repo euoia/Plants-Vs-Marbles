@@ -227,7 +227,11 @@ function updateMarbleAbility(game: Game, marble: Marble, deltaSeconds: number) {
     marble.elapsed = 0;
     fireProjectile(game, marble, false);
     game.schedule(() => {
-      if (game.state.marbles.includes(marble) && game.state.screen === 'play') {
+      if (
+        game.state.marbles.includes(marble) &&
+        game.state.screen === 'play' &&
+        !game.state.paused
+      ) {
         fireProjectile(game, marble, false);
       }
     }, 160);

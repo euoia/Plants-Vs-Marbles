@@ -1,3 +1,4 @@
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from './game/constants';
 import { createGame } from './game/game';
 import { createBrowserPreferenceStore, createMemoryPreferenceStore } from './game/preferences';
 import { updateGame } from './game/simulation';
@@ -23,15 +24,29 @@ try {
   console.warn('Local storage is unavailable. Preferences will be kept in memory.', error);
   preferenceStore = createMemoryPreferenceStore();
 }
-const game = createGame({ preferenceStore });
+const game = createGame({ preferenceStore, debugAvailable: import.meta.env.DEV });
 const view: RenderContext = { game, canvas, ctx };
 const unbindInput = bindInput(canvas, game);
 let previousFrame = performance.now();
 let frameRequest = 0;
 
+// Match the backing store to the displayed size times the screen's pixel density, so the game
+// is drawn sharp on high-density screens. Checked every frame to catch resizes, rotation, zoom
+// and moving the window to a screen with a different density.
+function fitCanvasToScreen(target: HTMLCanvasElement) {
+  const density = window.devicePixelRatio || 1;
+  const width = Math.max(1, Math.round(target.clientWidth * density));
+  const height = Math.round((width * CANVAS_HEIGHT) / CANVAS_WIDTH);
+  if (target.width !== width || target.height !== height) {
+    target.width = width;
+    target.height = height;
+  }
+}
+
 function frame(now: number) {
   const deltaSeconds = Math.min(0.05, (now - previousFrame) / 1000);
   previousFrame = now;
+  fitCanvasToScreen(view.canvas);
   updateGame(game, deltaSeconds);
   renderGame(view);
   frameRequest = requestAnimationFrame(frame);

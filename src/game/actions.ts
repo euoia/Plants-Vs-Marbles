@@ -11,7 +11,15 @@ import type { Game, HeldItem, ItemType } from './types';
 
 export function placeItem(game: Game, type: ItemType, lane: number, y: number) {
   const definition = ITEM_DEFINITIONS[type];
-  if (!game.debug && (game.state.crumbs < definition.cost || game.state.cooldowns[type] > 0)) {
+  if (!game.debug && game.state.crumbs < definition.cost) {
+    showNotification(game, `${definition.name} needs ${definition.cost} crumbs`);
+    return false;
+  }
+  if (!game.debug && game.state.cooldowns[type] > 0) {
+    showNotification(
+      game,
+      `${definition.name} is recharging: ${Math.ceil(game.state.cooldowns[type])}s`,
+    );
     return false;
   }
   y = Math.max(MIN_DROP_Y, Math.min(BOARD_BOTTOM - 60, y));
@@ -30,14 +38,12 @@ export function placeItem(game: Game, type: ItemType, lane: number, y: number) {
       showNotification(game, 'Track piece already there!');
       return false;
     }
-    game.state.crumbs -= definition.cost;
-    game.state.cooldowns[type] = definition.cooldown;
+    chargeForItem(game, type);
     game.state.trackPieces.push({ type: type, lane: lane, y: y, pulseRemaining: 0, strength: 4 });
     return true;
   }
   const marbleDefinition = ITEM_DEFINITIONS[type];
-  game.state.crumbs -= definition.cost;
-  game.state.cooldowns[type] = definition.cooldown;
+  chargeForItem(game, type);
   game.state.marbles.push({
     type: type,
     lane: lane,
@@ -60,6 +66,14 @@ export function placeItem(game: Game, type: ItemType, lane: number, y: number) {
   return true;
 }
 
+// Debug mode places for free so that switching it off restores the real crumb count.
+function chargeForItem(game: Game, type: ItemType) {
+  if (!game.debug) {
+    game.state.crumbs -= ITEM_DEFINITIONS[type].cost;
+    game.state.cooldowns[type] = ITEM_DEFINITIONS[type].cooldown;
+  }
+}
+
 export function callAnteater(game: Game) {
   if (game.state.screen !== 'play' || game.state.anteater || !game.state.abilities.eater) {
     return;
@@ -72,22 +86,36 @@ export function callAnteater(game: Game) {
   game.state.anteaterCooldown = ANTEATER_COOLDOWN;
 }
 
-export function showNotification(game: Game, time: string) {
-  game.state.notification = { text: time, lifeRemaining: 1.5 };
+export function showNotification(game: Game, text: string) {
+  game.state.notification = { text, lifeRemaining: 2 };
 }
 
 export function toggleDebug(game: Game) {
-  game.debug = !game.debug;
-  if (game.debug) {
-    game.state.crumbs = 9999;
+  if (!game.debugAvailable) {
+    return;
   }
+  game.debug = !game.debug;
   showNotification(game, 'Debug mode ' + (game.debug ? 'ON: infinite crumbs' : 'OFF'));
 }
 
 export function togglePause(game: Game) {
-  if (game.state.screen === 'play') {
+  if (game.state.screen === 'play' && !game.state.confirmingQuit) {
     game.state.paused = !game.state.paused;
   }
+}
+
+/** Pauses and asks before leaving, so a stray tap on Main menu cannot end a run. */
+export function requestQuit(game: Game) {
+  if (game.state.screen !== 'play') {
+    return;
+  }
+  game.state.confirmingQuit = true;
+  game.state.paused = true;
+}
+
+export function cancelQuit(game: Game) {
+  game.state.confirmingQuit = false;
+  game.state.paused = false;
 }
 
 export function toggleGlove(game: Game) {

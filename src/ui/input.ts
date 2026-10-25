@@ -1,18 +1,21 @@
 import {
   callAnteater,
+  cancelQuit,
   cancelSelection,
   dropHeldItem,
   findNearestItem,
   placeItem,
+  requestQuit,
   showNotification,
   toggleDebug,
   toggleGlove,
   togglePause,
 } from '../game/actions';
 import { spawnAnt } from '../game/combat';
-import { LANE_COUNT, TOOLBAR_HEIGHT } from '../game/constants';
+import { CANVAS_HEIGHT, CANVAS_WIDTH, LANE_COUNT, TOOLBAR_HEIGHT } from '../game/constants';
 import { ANT_TYPES } from '../game/definitions';
 import { resetGame } from '../game/game';
+import { advanceTutorial, currentTutorialStep, finishTutorial } from '../game/tutorial';
 import type { Game, Point } from '../game/types';
 import {
   containsPoint,
@@ -20,19 +23,25 @@ import {
   laneAt,
   MENU_BUTTON,
   PAUSE_BUTTON,
+  QUIT_KEEP_BUTTON,
+  QUIT_LEAVE_BUTTON,
   TOOL_BUTTONS,
   toolbarSlot,
+  TUTORIAL_NEXT_BUTTON,
+  TUTORIAL_SKIP_BUTTON,
 } from './layout';
 import { getMenuButtons } from './menus';
 
+// The backing store is scaled for the screen's pixel density, so map to the fixed game
+// coordinates rather than to canvas.width/height.
 export function canvasPoint(
-  canvas: HTMLCanvasElement,
+  canvas: Pick<HTMLCanvasElement, 'getBoundingClientRect'>,
   event: Pick<PointerEvent, 'clientX' | 'clientY'>,
 ): Point {
   const bounds = canvas.getBoundingClientRect();
   return {
-    x: ((event.clientX - bounds.left) * canvas.width) / bounds.width,
-    y: ((event.clientY - bounds.top) * canvas.height) / bounds.height,
+    x: ((event.clientX - bounds.left) * CANVAS_WIDTH) / bounds.width,
+    y: ((event.clientY - bounds.top) * CANVAS_HEIGHT) / bounds.height,
   };
 }
 
@@ -59,12 +68,33 @@ export function bindInput(canvas: HTMLCanvasElement, game: Game): () => void {
     (event) => {
       const pointerEvent = event as PointerEvent;
       if (pointerEvent.button === 0) {
-        handlePointerDown(game, canvasPoint(canvas, pointerEvent));
+        // touch has no hover, so the press is the first time we learn where the pointer is
+        game.state.pointer = canvasPoint(canvas, pointerEvent);
+        handlePointerDown(game, game.state.pointer);
+      }
+    },
+    options,
+  );
+  canvas.addEventListener(
+    'pointerup',
+    (event) => {
+      if ((event as PointerEvent).pointerType === 'touch') {
+        // stop the last tapped button from looking hovered on the next screen
+        game.state.pointer = { x: -1, y: -1 };
       }
     },
     options,
   );
   window.addEventListener('keydown', (event) => handleKeyDown(game, event), options);
+  document.addEventListener(
+    'visibilitychange',
+    () => {
+      if (document.hidden && game.state.screen === 'play' && !game.state.paused) {
+        togglePause(game);
+      }
+    },
+    options,
+  );
   return () => controller.abort();
 }
 
@@ -78,55 +108,59 @@ export function handlePointerDown(game: Game, point: Point) {
     }
     return;
   }
-  const pauseButton = PAUSE_BUTTON;
-  if (containsPoint(point, MENU_BUTTON)) {
-    resetGame(game);
+  if (game.state.confirmingQuit) {
+    if (containsPoint(point, QUIT_LEAVE_BUTTON) || containsPoint(point, MENU_BUTTON)) {
+      resetGame(game);
+    } else if (containsPoint(point, QUIT_KEEP_BUTTON)) {
+      cancelQuit(game);
+    }
     return;
   }
-  if (
-    point.x >= pauseButton.x &&
-    point.x <= pauseButton.x + pauseButton.width &&
-    point.y >= pauseButton.y &&
-    point.y <= pauseButton.y + pauseButton.height
-  ) {
+  if (containsPoint(point, MENU_BUTTON)) {
+    requestQuit(game);
+    return;
+  }
+  if (containsPoint(point, PAUSE_BUTTON)) {
     togglePause(game);
     return;
   }
   if (game.state.paused) {
     return;
   }
+  const tutorialStep = currentTutorialStep(game);
+  if (tutorialStep) {
+    if (containsPoint(point, TUTORIAL_SKIP_BUTTON)) {
+      finishTutorial(game);
+      return;
+    }
+    if (containsPoint(point, TUTORIAL_NEXT_BUTTON)) {
+      if (!tutorialStep.isComplete) {
+        advanceTutorial(game);
+      }
+      return;
+    }
+  }
   if (game.debug) {
     for (let index = 0; index < ANT_TYPES.length; index++) {
-      const button = debugAntButton(index);
-      if (
-        point.x >= button.x &&
-        point.x <= button.x + button.width &&
-        point.y >= button.y &&
-        point.y <= button.y + button.height
-      ) {
-        const time = ANT_TYPES[index];
-        spawnAnt(game, time, Math.floor(game.random() * LANE_COUNT));
+      if (containsPoint(point, debugAntButton(index))) {
+        spawnAnt(game, ANT_TYPES[index], Math.floor(game.random() * LANE_COUNT));
         return;
       }
     }
   }
-  for (const definition of game.state.crumbDrops) {
-    if (Math.hypot(definition.x - point.x, definition.y - point.y) < 24) {
-      game.state.crumbs += definition.value;
-      definition.lifeRemaining = 0;
-      return;
+  // the toolbar is drawn over falling crumbs, so it gets the click first
+  if (point.y >= TOOLBAR_HEIGHT) {
+    for (const drop of game.state.crumbDrops) {
+      if (Math.hypot(drop.x - point.x, drop.y - point.y) < 24) {
+        game.state.crumbs += drop.value;
+        drop.lifeRemaining = 0;
+        return;
+      }
     }
   }
   if (point.y < TOOLBAR_HEIGHT) {
-    for (const key of game.state.availableItems) {
-      const index = game.state.availableItems.indexOf(key);
-      const shape = toolbarSlot(index);
-      if (
-        point.x >= shape.x &&
-        point.x <= shape.x + shape.width &&
-        point.y >= shape.y &&
-        point.y <= shape.y + shape.height
-      ) {
+    for (const [index, key] of game.state.availableItems.entries()) {
+      if (containsPoint(point, toolbarSlot(index))) {
         const wasActive = game.state.selectedItem === key;
         cancelSelection(game);
         game.state.selectedItem = wasActive ? null : key;
@@ -177,13 +211,24 @@ export function handlePointerDown(game: Game, point: Point) {
   }
 }
 
-export function handleKeyDown(game: Game, event: Pick<KeyboardEvent, 'key' | 'preventDefault'>) {
-  if (event.key === 'F2') {
+export function handleKeyDown(
+  game: Game,
+  event: Pick<KeyboardEvent, 'key' | 'preventDefault'> &
+    Partial<Pick<KeyboardEvent, 'ctrlKey' | 'metaKey' | 'altKey'>>,
+) {
+  if (event.key === 'F2' && game.debugAvailable) {
     event.preventDefault();
     toggleDebug(game);
     return;
   }
-  if (game.state.screen !== 'play') {
+  // leave browser shortcuts such as Cmd+1 (switch tab) and Ctrl+- (zoom out) alone
+  if (game.state.screen !== 'play' || event.ctrlKey || event.metaKey || event.altKey) {
+    return;
+  }
+  if (game.state.confirmingQuit) {
+    if (event.key === 'Escape') {
+      cancelQuit(game);
+    }
     return;
   }
   if (event.key === 'p' || event.key === 'P') {
@@ -199,8 +244,12 @@ export function handleKeyDown(game: Game, event: Pick<KeyboardEvent, 'key' | 'pr
   if (event.key === 'g' || event.key === 'G') {
     toggleGlove(game);
   }
-  if (event.key === 'event' || event.key === 'E') {
+  if (event.key === 'e' || event.key === 'E') {
     callAnteater(game);
+  }
+  const tutorialStep = currentTutorialStep(game);
+  if (event.key === 'Enter' && tutorialStep && !tutorialStep.isComplete) {
+    advanceTutorial(game);
   }
   const index =
     event.key === '0'

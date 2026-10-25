@@ -10,6 +10,13 @@ import type { Point, Rectangle } from '../game/types';
 
 export const PAUSE_BUTTON = { x: 20, y: BOARD_Y + 69, width: 130, height: 28 };
 export const MENU_BUTTON = { x: 20, y: BOARD_Y + 103, width: 130, height: 28 };
+const BOARD_CENTER_X = BOARD_X + (LANE_COUNT * LANE_WIDTH) / 2;
+export const QUIT_LEAVE_BUTTON = { x: BOARD_CENTER_X - 150, y: 392, width: 140, height: 40 };
+export const QUIT_KEEP_BUTTON = { x: BOARD_CENTER_X + 10, y: 392, width: 140, height: 40 };
+// the tutorial card fills the empty column to the right of the board
+export const TUTORIAL_CARD = { x: 712, y: 118, width: 178, height: 290 };
+export const TUTORIAL_NEXT_BUTTON = { x: 724, y: 324, width: 154, height: 34 };
+export const TUTORIAL_SKIP_BUTTON = { x: 724, y: 366, width: 154, height: 30 };
 export const TOOL_BUTTONS = { eater: { x: 680, width: 68 }, glove: { x: 752, width: 138 } };
 export const toolbarSlot = (index: number) => ({
   x: 103 + index * 48,

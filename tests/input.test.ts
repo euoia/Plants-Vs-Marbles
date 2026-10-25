@@ -28,6 +28,7 @@ function key(game: ReturnType<typeof testGame>, value: string) {
 
 test('menu buttons navigate campaign, intro, play, and settings', () => {
   const game = createGame();
+  game.preferences.tutorialDone = true;
   getMenuButtons(game)
     .find((button) => button.label === 'Campaign')
     ?.onClick();
@@ -94,6 +95,7 @@ test('keyboard selection, pause, cancellation, and debug retain their original b
   key(game, 'p');
   key(game, 'Escape');
   assert.equal(game.state.selectedItem, null);
+  game.debugAvailable = true;
   assert.equal(key(game, 'F2'), true);
   assert.equal(game.debug, true);
 });

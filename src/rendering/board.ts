@@ -3,6 +3,8 @@ import {
   BOARD_BOTTOM,
   BOARD_X,
   BOARD_Y,
+  CANVAS_HEIGHT,
+  CANVAS_WIDTH,
   LANE_COUNT,
   LANE_LENGTH,
   LANE_WIDTH,
@@ -14,17 +16,17 @@ import type { RenderContext } from './context';
 import { roundedRect } from './primitives';
 
 export function drawBoard(view: RenderContext) {
-  const { ctx, canvas, game } = view;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const backdrop = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  const { ctx, game } = view;
+  ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  const backdrop = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
   backdrop.addColorStop(0, '#314b3e');
   backdrop.addColorStop(0.55, '#253d32');
   backdrop.addColorStop(1, '#1b3029');
   ctx.fillStyle = backdrop;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   for (let index = 0; index < 18; index++) {
-    const x = (index * 97 + 31) % canvas.width;
-    const y = TOOLBAR_HEIGHT + ((index * 137 + 67) % (canvas.height - TOOLBAR_HEIGHT));
+    const x = (index * 97 + 31) % CANVAS_WIDTH;
+    const y = TOOLBAR_HEIGHT + ((index * 137 + 67) % (CANVAS_HEIGHT - TOOLBAR_HEIGHT));
     ctx.fillStyle = index % 2 ? 'rgba(206,205,134,.08)' : 'rgba(140,190,125,.1)';
     ctx.beginPath();
     ctx.ellipse(x, y, 2 + (index % 3), 7 + (index % 4), index * 0.7, 0, 7);
@@ -123,9 +125,12 @@ export function drawBoard(view: RenderContext) {
   ctx.moveTo(BOARD_X + 12, BOARD_BOTTOM + 4);
   ctx.lineTo(BOARD_X + LANE_COUNT * LANE_WIDTH - 12, BOARD_BOTTOM + 4);
   ctx.stroke();
+  // label the hills from the side: centred under the board, the middle hill covered it
   ctx.fillStyle = '#edcf89';
   ctx.font = 'bold 12px "Trebuchet MS",sans-serif';
-  ctx.fillText('ANT TRAIL  ·  EXIT', BOARD_X + (LANE_COUNT * LANE_WIDTH) / 2, BOARD_BOTTOM + 25);
+  ctx.textAlign = 'right';
+  ctx.fillText('ANT HILLS', BOARD_X - 18, ANT_HILL_Y + 4);
+  ctx.textAlign = 'center';
   for (let lane = 0; lane < LANE_COUNT; lane++) {
     const active = game.state.ants.some(
       (ant) =>
