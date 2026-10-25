@@ -25,7 +25,10 @@ import {
 } from './layout';
 import { getMenuButtons } from './menus';
 
-export function canvasPoint(canvas: HTMLCanvasElement, event: MouseEvent): Point {
+export function canvasPoint(
+  canvas: HTMLCanvasElement,
+  event: Pick<PointerEvent, 'clientX' | 'clientY'>,
+): Point {
   const bounds = canvas.getBoundingClientRect();
   return {
     x: ((event.clientX - bounds.left) * canvas.width) / bounds.width,
@@ -37,9 +40,9 @@ export function bindInput(canvas: HTMLCanvasElement, game: Game): () => void {
   const controller = new AbortController();
   const options = { signal: controller.signal };
   canvas.addEventListener(
-    'mousemove',
+    'pointermove',
     (event) => {
-      game.state.pointer = canvasPoint(canvas, event);
+      game.state.pointer = canvasPoint(canvas, event as PointerEvent);
     },
     options,
   );
@@ -52,10 +55,11 @@ export function bindInput(canvas: HTMLCanvasElement, game: Game): () => void {
     options,
   );
   canvas.addEventListener(
-    'mousedown',
+    'pointerdown',
     (event) => {
-      if (event.button === 0) {
-        handlePointerDown(game, canvasPoint(canvas, event));
+      const pointerEvent = event as PointerEvent;
+      if (pointerEvent.button === 0) {
+        handlePointerDown(game, canvasPoint(canvas, pointerEvent));
       }
     },
     options,

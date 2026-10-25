@@ -10,7 +10,7 @@ import {
 import { GLOVE_COOLDOWN, MIN_DROP_Y, laneCenterX } from '../src/game/constants';
 import { CAMPAIGN_LEVELS } from '../src/game/definitions';
 import { createGame, startGame } from '../src/game/game';
-import { handleKeyDown, handlePointerDown } from '../src/ui/input';
+import { canvasPoint, handleKeyDown, handlePointerDown } from '../src/ui/input';
 import { containsPoint, laneAt, toolbarSlot } from '../src/ui/layout';
 import { getIntroductionRows, getMenuButtons } from '../src/ui/menus';
 import { testGame } from './helpers';
@@ -40,6 +40,23 @@ test('menu buttons navigate campaign, intro, play, and settings', () => {
   getMenuButtons(game)[0].onClick();
   assert.equal(game.state.screen, 'play');
   assert.deepEqual(game.state.availableItems, ['red']);
+});
+
+test('campaign and intro controls fit inside their menu panels', () => {
+  const game = createGame();
+  game.state.screen = 'levels';
+  const levelButtons = getMenuButtons(game).filter((button) => button.subtitle);
+  assert.equal(levelButtons.length, CAMPAIGN_LEVELS.length);
+  assert.ok(
+    levelButtons.every(
+      ({ x, y, width, height }) => x >= 184 && x + width <= 716 && y >= 210 && y + height <= 530,
+    ),
+  );
+  assert.equal(new Set(levelButtons.map(({ x }) => x)).size, 2);
+
+  startGame(game, 'campaign', 0);
+  const introButtons = getMenuButtons(game);
+  assert.ok(introButtons.every(({ y, height }) => y >= 68 && y + height <= 678));
 });
 
 test('placement charges crumbs, sets cooldown, clamps height, and rejects repeat purchases', () => {
@@ -165,6 +182,15 @@ test('crumb pickup and lane/button hit boundaries match the board geometry', () 
   assert.equal(laneAt({ x: 699, y: 650 }), 4);
   assert.equal(laneAt({ x: 700, y: 650 }), -1);
   assert.ok(containsPoint({ x: 10, y: 20 }, { x: 0, y: 0, width: 10, height: 20 }));
+});
+
+test('canvas pointer coordinates map correctly when the canvas is scaled', () => {
+  const canvas = {
+    width: 900,
+    height: 700,
+    getBoundingClientRect: () => ({ left: 10, top: 20, width: 450, height: 350 }),
+  } as HTMLCanvasElement;
+  assert.deepEqual(canvasPoint(canvas, { clientX: 235, clientY: 195 }), { x: 450, y: 350 });
 });
 
 test('separate games do not share mutable state, progress, or cooldowns', () => {

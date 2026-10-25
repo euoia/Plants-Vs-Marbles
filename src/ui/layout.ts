@@ -8,8 +8,8 @@ import {
 } from '../game/constants';
 import type { Point, Rectangle } from '../game/types';
 
-export const PAUSE_BUTTON = { x: 20, y: BOARD_Y + 52, width: 130, height: 28 };
-export const MENU_BUTTON = { x: 20, y: BOARD_Y + 86, width: 130, height: 28 };
+export const PAUSE_BUTTON = { x: 20, y: BOARD_Y + 69, width: 130, height: 28 };
+export const MENU_BUTTON = { x: 20, y: BOARD_Y + 103, width: 130, height: 28 };
 export const TOOL_BUTTONS = { eater: { x: 680, width: 68 }, glove: { x: 752, width: 138 } };
 export const toolbarSlot = (index: number) => ({
   x: 103 + index * 48,

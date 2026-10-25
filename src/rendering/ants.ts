@@ -370,12 +370,12 @@ export function drawAntBody(view: RenderContext, ant: AntAppearance) {
     ctx.stroke();
   }
   ctx.restore();
-  if (!ant.emergence && ant.maxHealth > 100) {
+  if (!ant.emergence && ant.health > 0 && ant.maxHealth > 0) {
+    const barY = Math.max(TOOLBAR_HEIGHT + 6, y - 28 * scale - 10);
     ctx.fillStyle = 'rgba(20,30,25,.75)';
-    roundedRect(view, x - 16, y + 18 * scale, 32, 5, 2);
+    roundedRect(view, x - 16, barY, 32, 6, 2);
     ctx.fill();
     ctx.fillStyle = '#e47b61';
-    roundedRect(view, x - 15, y + 19 * scale, 30 * Math.max(0, ant.health / ant.maxHealth), 3, 1);
-    ctx.fill();
+    ctx.fillRect(x - 15, barY + 1, 30 * Math.min(1, ant.health / ant.maxHealth), 4);
   }
 }

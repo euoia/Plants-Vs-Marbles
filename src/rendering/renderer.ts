@@ -233,9 +233,9 @@ function drawStatus(view: RenderContext) {
     if (game.mode === 'campaign') {
       ctx.textAlign = 'left';
       ctx.font = 'bold 13px sans-serif';
-      ctx.fillText('Level ' + (game.levelIndex + 1), 20, BOARD_Y + 138);
+      ctx.fillText('Level ' + (game.levelIndex + 1), 20, BOARD_Y + 155);
       ctx.font = '12px sans-serif';
-      ctx.fillText(CAMPAIGN_LEVELS[game.levelIndex].name, 20, BOARD_Y + 156);
+      ctx.fillText(CAMPAIGN_LEVELS[game.levelIndex].name, 20, BOARD_Y + 173);
     }
   }
   if (game.state.screen !== 'play') {

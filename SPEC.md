@@ -17,11 +17,12 @@ A browser tower-defence game in the style of Plants vs Zombies. Ants climb a mar
 - **Bottom:** the exit, where ants enter. Marbles stop at the exit.
 - Top bar: crumb counter, marble selector (11 slots incl. track pieces), eater, glove.
 - Left side: invasion progress bar.
+- On phones, tap the canvas to use controls; landscape orientation gives the clearest view.
 
 ## 3. Resources — Crumbs
 
 - Start with **150**.
-- Crumbs fall from the sky every 7–10 s (worth 25, vanish after 10 s); click to collect.
+- Crumbs fall from the sky every 7–10 s (worth 25, vanish after 10 s); click or tap to collect.
 - Gold marbles also produce crumbs (see below).
 
 ## 4. Marbles (defenders)

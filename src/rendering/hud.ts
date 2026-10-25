@@ -186,11 +186,22 @@ export function drawMenuOverlay(view: RenderContext) {
   panel.addColorStop(0, 'rgba(63,86,60,.96)');
   panel.addColorStop(1, 'rgba(34,59,48,.97)');
   ctx.fillStyle = panel;
-  roundedRect(view, 174, 105, 552, 500, 24);
+  const panelBounds =
+    screen === 'intro'
+      ? { x: 174, y: 68, width: 552, height: 610 }
+      : { x: 174, y: 105, width: 552, height: 500 };
+  roundedRect(view, panelBounds.x, panelBounds.y, panelBounds.width, panelBounds.height, 24);
   ctx.fill();
   ctx.strokeStyle = 'rgba(230,204,142,.55)';
   ctx.lineWidth = 2;
-  roundedRect(view, 175, 106, 550, 498, 23);
+  roundedRect(
+    view,
+    panelBounds.x + 1,
+    panelBounds.y + 1,
+    panelBounds.width - 2,
+    panelBounds.height - 2,
+    23,
+  );
   ctx.stroke();
   ctx.fillStyle = '#fff4d8';
   ctx.textAlign = 'center';
@@ -226,7 +237,7 @@ export function drawMenuOverlay(view: RenderContext) {
     ctx.fillText(`Level ${game.levelIndex + 1}: ${level.name}`, centerX, 139);
     ctx.font = '16px "Trebuchet MS",sans-serif';
     ctx.fillStyle = '#f1d58e';
-    ctx.fillText(level.tip, centerX, 174);
+    drawWrappedText(ctx, level.tip, centerX, 174, 500, 18);
     ctx.fillStyle = '#fff';
     if (rows.length) {
       ctx.font = 'bold 14px "Trebuchet MS",sans-serif';
@@ -296,15 +307,49 @@ export function drawMenuOverlay(view: RenderContext) {
     ctx.fillStyle = button.locked ? '#666' : hot ? '#ffd54f' : '#fff';
     if (button.subtitle) {
       ctx.fillStyle = button.locked ? '#879083' : '#fff4d8';
-      ctx.font = 'bold 32px "Trebuchet MS",sans-serif';
-      ctx.fillText(button.locked ? '🔒' : button.label, button.x + button.width / 2, button.y + 48);
+      const compact = button.height < 70;
+      ctx.font = `bold ${compact ? 20 : 32}px "Trebuchet MS",sans-serif`;
+      ctx.fillText(
+        button.locked ? '🔒' : button.label,
+        button.x + button.width / 2,
+        button.y + (compact ? 25 : 48),
+      );
       ctx.fillStyle = '#e6d8b5';
-      ctx.font = '10px "Trebuchet MS",sans-serif';
-      ctx.fillText(button.subtitle, button.x + button.width / 2, button.y + button.height - 12);
+      ctx.font = `${compact ? 12 : 10}px "Trebuchet MS",sans-serif`;
+      ctx.fillText(
+        button.subtitle,
+        button.x + button.width / 2,
+        button.y + (compact ? 46 : button.height - 12),
+      );
     } else {
       ctx.fillStyle = '#fff4d8';
       ctx.font = 'bold 18px "Trebuchet MS",sans-serif';
       ctx.fillText(button.label, button.x + button.width / 2, button.y + 29);
     }
   }
+}
+
+function drawWrappedText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  centerX: number,
+  y: number,
+  maxWidth: number,
+  lineHeight: number,
+) {
+  const lines: string[] = [];
+  let line = '';
+  for (const word of text.split(/\s+/)) {
+    const candidate = line ? `${line} ${word}` : word;
+    if (line && ctx.measureText(candidate).width > maxWidth) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = candidate;
+    }
+  }
+  if (line) {
+    lines.push(line);
+  }
+  lines.forEach((line, index) => ctx.fillText(line, centerX, y + index * lineHeight));
 }

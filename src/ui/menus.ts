@@ -79,23 +79,23 @@ export function getMenuButtons(game: Game): MenuButton[] {
     case 'levels':
       return [
         ...CAMPAIGN_LEVELS.map((level, levelIndex) => ({
-          x: 130 + (levelIndex % 5) * 130,
-          y: 250 + Math.floor(levelIndex / 5) * 120,
-          width: 110,
-          height: 100,
+          x: (CANVAS_WIDTH - (2 * 220 + 18)) / 2 + (levelIndex % 2) * (220 + 18),
+          y: 220 + Math.floor(levelIndex / 2) * 60,
+          width: 220,
+          height: 54,
           label: String(levelIndex + 1),
           subtitle: level.name,
           locked: levelIndex >= game.preferences.unlockedLevels,
           onClick: () => startGame(game, 'campaign', levelIndex),
         })),
-        button('Back', 520, () => resetGame(game)),
+        button('Back', 540, () => resetGame(game)),
       ];
     case 'intro':
       return [
-        button('Start', 590, () => {
+        button('Start', 548, () => {
           game.state.screen = 'play';
         }),
-        button('Back', 646, () => {
+        button('Back', 600, () => {
           resetGame(game);
           game.state.screen = 'levels';
         }),

@@ -3,21 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <title>Ants vs Marbles</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   </head>
   <body>
     <h1>🐜 Ants vs Marbles</h1>
     <canvas id="c" width="900" height="700"></canvas>
     <p>
-      Pick a marble, then click a lane to drop it in from that height (higher = harder landing on
-      ants; heavier marbles hit harder). Marbles roll toward the exit and stop at ants; they pass
-      through each other unless one is being chewed, in which case the ones behind queue up.
+      Pick a marble, then click or tap a lane to drop it in from that height (higher = harder
+      landing on ants; heavier marbles hit harder). Marbles roll toward the exit and stop at ants;
+      they pass through each other unless one is being chewed, in which case the ones behind queue
+      up.
       <b>Track pieces</b>: Ramps slide marbles into the next lane, Rings pay out crumbs every time a
       marble drops through, Springs bounce them back up toward the top for another drop — click a
       placed spring to cycle its strength (1–4 bars) and set how high it bounces. Ant Eater (E)
-      sweeps the whole maze clean — then rests 90 s. Collect crumbs by clicking them. Right-click /
-      Esc cancels, G = glove (moves marbles and track pieces).
+      sweeps the whole maze clean — then rests 90 s. Collect crumbs by clicking or tapping them.
+      Right-click / Esc cancels, G = glove (moves marbles and track pieces).
     </p>
+    <p class="mobile-hint">For a more comfortable game view, rotate your phone to landscape.</p>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
