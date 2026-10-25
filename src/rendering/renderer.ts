@@ -10,7 +10,7 @@ import {
   TOOLBAR_HEIGHT,
 } from '../game/constants';
 import { ANT_DEFINITIONS, ANT_TYPES, CAMPAIGN_LEVELS } from '../game/definitions';
-import { debugAntButton, laneAt, MENU_BUTTON, PAUSE_BUTTON } from '../ui/layout';
+import { DEBUG_BUTTON, debugAntButton, laneAt, MENU_BUTTON, PAUSE_BUTTON } from '../ui/layout';
 import { drawAnt, drawAnteater } from './ants';
 import { drawBoard } from './board';
 import type { RenderContext } from './context';
@@ -197,6 +197,20 @@ function drawStatus(view: RenderContext) {
       BOARD_Y + LANE_LENGTH / 2,
     );
   }
+  if (game.state.screen === 'play' && game.state.paused) {
+    ctx.fillStyle = 'rgba(0,0,0,.55)';
+    ctx.fillRect(0, TOOLBAR_HEIGHT, canvas.width, canvas.height - TOOLBAR_HEIGHT);
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.font = 'bold 48px sans-serif';
+    ctx.fillText('Paused', BOARD_X + (LANE_COUNT * LANE_WIDTH) / 2, BOARD_Y + LANE_LENGTH / 2);
+    ctx.font = '18px sans-serif';
+    ctx.fillText(
+      'Press P or click Resume',
+      BOARD_X + (LANE_COUNT * LANE_WIDTH) / 2,
+      BOARD_Y + LANE_LENGTH / 2 + 34,
+    );
+  }
   if (game.state.screen === 'play') {
     const button = PAUSE_BUTTON;
     ctx.fillStyle = game.state.paused ? '#e3cb88' : 'rgba(21,39,31,.82)';
@@ -230,28 +244,36 @@ function drawStatus(view: RenderContext) {
     ctx.stroke();
     ctx.fillStyle = '#f7f0dc';
     ctx.fillText('☰  Main menu', menuButton.x + menuButton.width / 2, menuButton.y + 19);
+    const debugButton = DEBUG_BUTTON;
+    ctx.fillStyle = game.debug ? '#647746' : 'rgba(21,39,31,.82)';
+    roundedRect(view, debugButton.x, debugButton.y, debugButton.width, debugButton.height, 8);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(239,220,168,.55)';
+    roundedRect(
+      view,
+      debugButton.x + 0.5,
+      debugButton.y + 0.5,
+      debugButton.width - 1,
+      debugButton.height - 1,
+      8,
+    );
+    ctx.stroke();
+    ctx.fillStyle = '#f7f0dc';
+    ctx.font = 'bold 12px "Trebuchet MS",sans-serif';
+    ctx.fillText(
+      game.debug ? 'Debug: ON' : 'Debug: OFF',
+      debugButton.x + debugButton.width / 2,
+      debugButton.y + 24,
+    );
     if (game.mode === 'campaign') {
       ctx.textAlign = 'left';
       ctx.font = 'bold 13px sans-serif';
-      ctx.fillText('Level ' + (game.levelIndex + 1), 20, BOARD_Y + 155);
+      ctx.fillText('Level ' + (game.levelIndex + 1), 20, BOARD_Y + 201);
       ctx.font = '12px sans-serif';
-      ctx.fillText(CAMPAIGN_LEVELS[game.levelIndex].name, 20, BOARD_Y + 173);
+      ctx.fillText(CAMPAIGN_LEVELS[game.levelIndex].name, 20, BOARD_Y + 219);
     }
   }
   if (game.state.screen !== 'play') {
     drawMenuOverlay(view);
-  } else if (game.state.paused) {
-    ctx.fillStyle = 'rgba(0,0,0,.55)';
-    ctx.fillRect(0, TOOLBAR_HEIGHT, canvas.width, canvas.height - TOOLBAR_HEIGHT);
-    ctx.fillStyle = '#fff';
-    ctx.textAlign = 'center';
-    ctx.font = 'bold 48px sans-serif';
-    ctx.fillText('Paused', BOARD_X + (LANE_COUNT * LANE_WIDTH) / 2, BOARD_Y + LANE_LENGTH / 2);
-    ctx.font = '18px sans-serif';
-    ctx.fillText(
-      'Press P or click Resume',
-      BOARD_X + (LANE_COUNT * LANE_WIDTH) / 2,
-      BOARD_Y + LANE_LENGTH / 2 + 34,
-    );
   }
 }

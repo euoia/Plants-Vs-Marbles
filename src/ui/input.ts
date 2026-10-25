@@ -16,6 +16,7 @@ import { resetGame } from '../game/game';
 import type { Game, Point } from '../game/types';
 import {
   containsPoint,
+  DEBUG_BUTTON,
   debugAntButton,
   laneAt,
   MENU_BUTTON,
@@ -90,6 +91,10 @@ export function handlePointerDown(game: Game, point: Point) {
     point.y <= pauseButton.y + pauseButton.height
   ) {
     togglePause(game);
+    return;
+  }
+  if (containsPoint(point, DEBUG_BUTTON)) {
+    toggleDebug(game);
     return;
   }
   if (game.state.paused) {

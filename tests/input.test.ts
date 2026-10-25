@@ -11,7 +11,7 @@ import { GLOVE_COOLDOWN, MIN_DROP_Y, laneCenterX } from '../src/game/constants';
 import { CAMPAIGN_LEVELS } from '../src/game/definitions';
 import { createGame, startGame } from '../src/game/game';
 import { canvasPoint, handleKeyDown, handlePointerDown } from '../src/ui/input';
-import { containsPoint, laneAt, toolbarSlot } from '../src/ui/layout';
+import { containsPoint, DEBUG_BUTTON, laneAt, toolbarSlot } from '../src/ui/layout';
 import { getIntroductionRows, getMenuButtons } from '../src/ui/menus';
 import { testGame } from './helpers';
 
@@ -96,6 +96,19 @@ test('keyboard selection, pause, cancellation, and debug retain their original b
   assert.equal(game.state.selectedItem, null);
   assert.equal(key(game, 'F2'), true);
   assert.equal(game.debug, true);
+});
+
+test('on-screen debug button toggles debug mode while playing or paused', () => {
+  const game = testGame();
+  const point = { x: DEBUG_BUTTON.x + DEBUG_BUTTON.width / 2, y: DEBUG_BUTTON.y + 19 };
+  handlePointerDown(game, point);
+  assert.equal(game.debug, true);
+  assert.equal(game.state.crumbs, 9999);
+
+  game.state.paused = true;
+  handlePointerDown(game, point);
+  assert.equal(game.debug, false);
+  assert.match(game.state.notification?.text ?? '', /Debug mode OFF/);
 });
 
 test('toolbar clicks toggle selection and a board click places the selected item', () => {
