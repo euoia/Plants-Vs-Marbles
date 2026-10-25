@@ -13,6 +13,8 @@ npm run dev
 
 Open the local URL printed by Vite, usually `http://127.0.0.1:5173`.
 The source now uses ES modules: opening the HTML file directly is no longer supported.
+The game supports touch input on phones and adapts its canvas to small screens. Landscape
+orientation provides the clearest view of the playfield and toolbar.
 
 ```sh
 npm run check   # Strict type checking, regression tests, and formatting checks
@@ -59,7 +61,9 @@ Each game has an explicit `Game` object containing its current state, preference
 
 Marbles update **lowest first** so they can queue behind another marble being chewed. Ants added by the Queen are processed during that same ant-update pass. Changing these orders can change gameplay.
 
-`renderGame(view)` paints the current state through a `RenderContext` containing the game, canvas, and drawing context. Rendering does not advance gameplay or modify game state. Mouse and keyboard listeners call the same exported action/input functions used by tests; their cleanup is registered with Vite's hot-reload lifecycle.
+`renderGame(view)` paints the current state through a `RenderContext` containing the game, canvas, and drawing context. Rendering does not advance gameplay or modify game state. Pointer and keyboard listeners call the same exported action/input functions used by tests; their cleanup is registered with Vite's hot-reload lifecycle.
+
+Living ants show health bars above their bodies regardless of maximum health, including the reduced-health campaign variants. Bars stay hidden while ants emerge or burrow.
 
 ### Making a change
 
